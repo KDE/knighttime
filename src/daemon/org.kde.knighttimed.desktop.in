@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Night Time Service
+Exec=@KDE_INSTALL_FULL_LIBEXECDIR@/knighttimed
+NoDisplay=true
+OnlyShowIn=KDE;
+X-systemd-skip=true

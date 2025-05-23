@@ -1,0 +1,8 @@
+[Unit]
+Description=KDE Night Time Service
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=@KDE_INSTALL_FULL_LIBEXECDIR@/knighttimed
+BusName=org.kde.NightTime
+Slice=background.slice

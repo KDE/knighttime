@@ -1,0 +1,12 @@
+/*!
+    \module KNightTime
+    \title KNightTime C++ Classes
+    \ingroup modules
+    \cmakepackage KNightTime
+
+    \brief Dark-light cycle schedule.
+
+    This library provides a C++ API that provides information about the
+    dark-light cycle schedule. It can be used to implement such as
+    adjusting the screen color temperature depending on time of day, etc.
+*/

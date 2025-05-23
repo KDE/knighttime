@@ -1,0 +1,76 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+    SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<node name="/org/kde/NightTime/Manager">
+    <!--
+        org.kde.NightTime.Manager:
+        @short_description: Night time interface
+
+        This interface provides sunrise and sunset times. It can be used to implement features such
+        as adjusting the screen color temperature based on time of day, etc.
+
+        The schedule structure has the following format: (sv). The first value specifies the type
+        of the schedule (currently, only "sunrise-sunset" is supported). The second value contains
+        the actual schedule information.
+
+        With the sunrise-sunset type, the schedule payload has "a(xxxxx)" type:
+
+        * noon (x): the unix timestamp (in milliseconds) of the noon
+        * morning-start (x): the unix timestamp (in milliseconds) of the time when morning starts
+        * morning-end (x): the unix timestamp (in milliseconds) of the time when morning ends
+        * evening-start (x): the unix timestamp (in milliseconds) of the time when evening starts
+        * evening-end (x): the unix timestamp (in milliseconds) of the time when evening ends
+    -->
+    <interface name="org.kde.NightTime.Manager">
+        <!--
+            Version:
+
+            API version. Currently, it is 1.
+        -->
+        <property name="Version" type="u" access="read"/>
+
+        <!--
+            Refreshed:
+            @data: A vardict containing new information
+
+            This signal is emitted when the schedule is updated. This signal will be emitted only
+            after Subscribe() is called. The resulting vardict includes the following items:
+
+            * "Schedule" ((sv)): Day time and night time schedule
+        -->
+        <signal name="Refreshed">
+            <arg name="data" type="{sv}" direction="out"/>
+        </signal>
+
+        <!--
+            Subscribe:
+            @results: Vardict with results of the call
+
+            Start receiving scheduling information.
+
+            The @results vardict includes the following items:
+
+            * "Cookie" (u): An ID that uniquely identifies this subscription, it can be passed to Unsubscribe()
+            * "Schedule" ((sv)): Day time and night time schedule
+
+            If the schedule changes later, you will receive a Refreshed() signal.
+        -->
+        <method name="Subscribe">
+            <arg name="results" type="{sv}" direction="out"/>
+        </method>
+
+        <!--
+            Unsubscribe:
+            @cookie: Subscription id returned by Subscribe()
+
+            Stop receiving scheduling information.
+        -->
+        <method name="Unsubscribe">
+            <arg name="cookie" type="u" direction="in"/>
+        </method>
+    </interface>
+</node>
