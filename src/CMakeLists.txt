@@ -34,6 +34,21 @@ target_link_libraries(KNightTime
 
 install(TARGETS KNightTime EXPORT KNightTimeTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
+ecm_qt_declare_logging_category(KNightTime
+    HEADER knighttimelogging.h
+    IDENTIFIER KNIGHTTIME
+    CATEGORY_NAME knighttime
+    DEFAULT_SEVERITY Warning
+    DESCRIPTION "Dark-light cycle schedule"
+    EXPORT KNightTime
+)
+
+ecm_qt_install_logging_categories(
+    EXPORT KNightTime
+    FILE knighttime.categories
+    DESTINATION "${KDE_INSTALL_LOGGINGCATEGORIESDIR}"
+)
+
 ecm_generate_qdoc(KNightTime knighttime.qdocconf)
 
 ecm_generate_headers(KNightTime_HEADERS

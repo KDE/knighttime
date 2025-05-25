@@ -6,6 +6,7 @@
 
 #include "knighttimeschedulesubscription_p.h"
 #include "knighttimedbustypes_p.h"
+#include "knighttimelogging.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>
@@ -41,6 +42,7 @@ KNightTimeScheduleSubscription::KNightTimeScheduleSubscription(QObject *parent)
         watcher->deleteLater();
 
         if (watcher->isError()) {
+            qCWarning(KNIGHTTIME) << "Subscribe() failed:" << watcher->error();
             return;
         }
 
@@ -78,10 +80,15 @@ void KNightTimeScheduleSubscription::OnSubscribed(const QVariantMap &data)
     if (auto it = data.find(QStringLiteral("Cookie")); it != data.end()) {
         m_cookie = it->toUInt();
     } else {
+        qCWarning(KNIGHTTIME) << "Subscribe() reply contains no Cookie. Available data:" << data;
         return;
     }
 
-    update(data[QStringLiteral("Schedule")]);
+    if (auto it = data.find(QStringLiteral("Schedule")); it != data.end()) {
+        update(*it);
+    } else {
+        qCWarning(KNIGHTTIME) << "Subscribe() reply contains no Schedule. Available data:" << data;
+    }
 }
 
 void KNightTimeScheduleSubscription::OnRefreshed(const QVariantMap &data)
