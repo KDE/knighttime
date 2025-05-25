@@ -14,10 +14,10 @@
         as adjusting the screen color temperature based on time of day, etc.
 
         The schedule structure has the following format: (sv). The first value specifies the type
-        of the schedule (currently, only "sunrise-sunset" is supported). The second value contains
+        of the schedule (currently, only "dynamic" is supported). The second value contains
         the actual schedule information.
 
-        With the sunrise-sunset type, the schedule payload has "a(xxxxx)" type:
+        With the dynamic type, the schedule payload has "a(xxxxx)" type:
 
         * noon (x): the unix timestamp (in milliseconds) of the noon
         * morning-start (x): the unix timestamp (in milliseconds) of the time when morning starts

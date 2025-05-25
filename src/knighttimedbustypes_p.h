@@ -94,7 +94,7 @@ inline KNightTimeDbusCycle KNightTimeDbusCycle::from(const KNightTimeCycle &cycl
 
 inline KNightTimeSchedule KNightTimeDbusSchedule::into() const
 {
-    if (name != QLatin1String("sunrise-sunset")) {
+    if (name != QLatin1String("dynamic")) {
         return KNightTimeSchedule();
     }
 
@@ -118,7 +118,7 @@ inline KNightTimeDbusSchedule KNightTimeDbusSchedule::from(const KNightTimeSched
     }
 
     return KNightTimeDbusSchedule{
-        .name = QStringLiteral("sunrise-sunset"),
+        .name = QStringLiteral("dynamic"),
         .data = QDBusVariant(QVariant::fromValue(dbusCycles)),
     };
 }
