@@ -7,6 +7,7 @@
 #include "knighttimeschedulesubscription_p.h"
 #include "knighttimedbustypes_p.h"
 
+#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
@@ -36,7 +37,7 @@ KNightTimeScheduleSubscription::KNightTimeScheduleSubscription(QObject *parent)
 
     auto watcher = new QDBusPendingCallWatcher(pendingCall);
     auto self = QPointer(this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, [self](QDBusPendingCallWatcher *watcher) {
+    connect(watcher, &QDBusPendingCallWatcher::finished, qApp, [self](QDBusPendingCallWatcher *watcher) {
         watcher->deleteLater();
 
         if (watcher->isError()) {
