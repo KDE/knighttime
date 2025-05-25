@@ -1,3 +1,9 @@
+<!--
+    SPDX-FileCopyrightText: None
+
+    SPDX-License-Identifier: CC0-1.0
+-->
+
 # KNightTime
 
 The `KNightTime` provides the dark-light cycle schedule information. It can be used to implement

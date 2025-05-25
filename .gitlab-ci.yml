@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+# SPDX-FileCopyrightText: None
 # SPDX-License-Identifier: CC0-1.0
 
 include:
@@ -8,4 +8,5 @@ include:
       - /gitlab-templates/freebsd-qt6.yml
       - /gitlab-templates/xml-lint.yml
       - /gitlab-templates/yaml-lint.yml
+      - /gitlab-templates/reuse-lint.yml
       - /gitlab-templates/linux-qt6-next.yml

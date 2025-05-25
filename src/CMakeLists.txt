@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 add_library(KNightTime)
 
 generate_export_header(KNightTime EXPORT_FILE_NAME knighttime_export.h)

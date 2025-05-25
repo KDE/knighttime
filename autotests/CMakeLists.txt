@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
 include(ECMMarkAsTest)
 
 find_package(Qt6Test CONFIG REQUIRED)
