@@ -6,15 +6,19 @@
 
 #include "ksolarnighttimescheduler.h"
 
-KSolarNightTimeScheduler::KSolarNightTimeScheduler(qreal latitude, qreal longitude)
-    : m_latitude(latitude)
-    , m_longitude(longitude)
+KSolarNightTimeScheduler::KSolarNightTimeScheduler(const QGeoCoordinate &coordinate)
+    : m_coordinate(coordinate)
 {
+}
+
+QGeoCoordinate KSolarNightTimeScheduler::coordinate() const
+{
+    return m_coordinate;
 }
 
 KNightTimeSchedule KSolarNightTimeScheduler::schedule(const QDateTime &referenceDateTime)
 {
-    if (auto schedule = KNightTimeSchedule::forecast(referenceDateTime, m_latitude, m_longitude)) {
+    if (auto schedule = KNightTimeSchedule::forecast(referenceDateTime, m_coordinate.latitude(), m_coordinate.longitude())) {
         return *schedule;
     }
     return KNightTimeSchedule::forecast(referenceDateTime);

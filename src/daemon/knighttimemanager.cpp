@@ -68,13 +68,17 @@ void KNightTimeManager::reconfigure()
                 m_state->setLongitude(coordinate.longitude());
                 m_state->save();
 
-                m_scheduler = std::make_unique<KSolarNightTimeScheduler>(coordinate.latitude(), coordinate.longitude());
-                reschedule();
+                const int minDistanceInMeters = 50000;
+                const auto currentScheduler = dynamic_cast<KSolarNightTimeScheduler *>(m_scheduler.get());
+                if (!currentScheduler || coordinate.distanceTo(currentScheduler->coordinate()) > minDistanceInMeters) {
+                    m_scheduler = std::make_unique<KSolarNightTimeScheduler>(coordinate);
+                    reschedule();
+                }
             });
 
             m_positionInfoSource->startUpdates();
             if (m_state->available()) {
-                m_scheduler = std::make_unique<KSolarNightTimeScheduler>(m_state->latitude(), m_state->longitude());
+                m_scheduler = std::make_unique<KSolarNightTimeScheduler>(QGeoCoordinate(m_state->latitude(), m_state->longitude()));
                 break;
             }
         }
@@ -82,7 +86,7 @@ void KNightTimeManager::reconfigure()
         m_scheduler = std::make_unique<KTimedNightTimeScheduler>(QTime::fromString(m_settings->sunriseStart()), QTime::fromString(m_settings->sunsetStart()), m_settings->transitionDuration());
         break;
     case KNightTimeSettings::ManualLocation:
-        m_scheduler = std::make_unique<KSolarNightTimeScheduler>(m_settings->latitude(), m_settings->longitude());
+        m_scheduler = std::make_unique<KSolarNightTimeScheduler>(QGeoCoordinate(m_settings->latitude(), m_settings->longitude()));
         break;
     case KNightTimeSettings::ManualTimes:
         m_scheduler = std::make_unique<KTimedNightTimeScheduler>(QTime::fromString(m_settings->sunriseStart()), QTime::fromString(m_settings->sunsetStart()), m_settings->transitionDuration());

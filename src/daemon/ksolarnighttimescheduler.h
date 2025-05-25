@@ -8,14 +8,17 @@
 
 #include "knighttimescheduler.h"
 
+#include <QGeoCoordinate>
+
 class KSolarNightTimeScheduler : public KNightTimeScheduler
 {
 public:
-    KSolarNightTimeScheduler(qreal latitude, qreal longitude);
+    explicit KSolarNightTimeScheduler(const QGeoCoordinate &coordinate);
+
+    QGeoCoordinate coordinate() const;
 
     KNightTimeSchedule schedule(const QDateTime &referenceDateTime) override;
 
 private:
-    qreal m_latitude;
-    qreal m_longitude;
+    QGeoCoordinate m_coordinate;
 };
