@@ -19,6 +19,7 @@ find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(CMakePackageConfigHelpers)
+include(CheckCXXCompilerFlag)
 include(FeatureSummary)
 include(GenerateExportHeader)
 
@@ -47,6 +48,11 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     DBusAddons
     Holidays
 )
+
+check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTED)
+if (COMPILER_UNUSED_PARAMETER_SUPPORTED)
+    add_compile_options(-Wno-unused-parameter)
+endif()
 
 if (BUILD_TESTING)
     add_subdirectory(autotests)

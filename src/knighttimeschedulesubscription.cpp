@@ -34,6 +34,7 @@ KNightTimeScheduleSubscription::KNightTimeScheduleSubscription(QObject *parent)
     QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Refreshed"), this, SLOT(OnRefreshed(QVariantMap)));
 
     auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Subscribe"));
+    message.setArguments({QVariantMap()});
     auto pendingCall = QDBusConnection::sessionBus().asyncCall(message);
 
     auto watcher = new QDBusPendingCallWatcher(pendingCall);

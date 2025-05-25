@@ -34,7 +34,7 @@ uint KNightTimeManagerInterface::version() const
     return 1;
 }
 
-QVariantMap KNightTimeManagerInterface::Subscribe()
+QVariantMap KNightTimeManagerInterface::Subscribe(const QVariantMap &options)
 {
     const QString subscriber = message().service();
     m_serviceWatcher->addWatchedService(subscriber);

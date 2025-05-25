@@ -30,7 +30,7 @@ Q_SIGNALS:
     Q_SCRIPTABLE void Refreshed(const QVariantMap &data);
 
 public Q_SLOTS:
-    Q_SCRIPTABLE QVariantMap Subscribe();
+    Q_SCRIPTABLE QVariantMap Subscribe(const QVariantMap &options);
     Q_SCRIPTABLE void Unsubscribe(uint cookie);
 
 private Q_SLOTS:

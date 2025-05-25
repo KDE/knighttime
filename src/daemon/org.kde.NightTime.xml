@@ -48,6 +48,7 @@
 
         <!--
             Subscribe:
+            *options: An empty vardict, for future extensibility
             @results: Vardict with results of the call
 
             Start receiving scheduling information.
@@ -60,6 +61,7 @@
             If the schedule changes later, you will receive a Refreshed() signal.
         -->
         <method name="Subscribe">
+            <arg name="options" type="{sv}" direction="in"/>
             <arg name="results" type="{sv}" direction="out"/>
         </method>
 
