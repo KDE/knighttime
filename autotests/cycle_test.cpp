@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QTest>
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
 class CycleTest : public QObject
 {
@@ -21,17 +21,17 @@ private Q_SLOTS:
 
 void CycleTest::extrapolated()
 {
-    const KNightTimeCycle originalCycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
-                                        KNightTimeTransition(KNightTimeTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
-                                        KNightTimeTransition(KNightTimeTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))));
+    const KDarkLightCycle originalCycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
+                                        KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
+                                        KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))));
 
     for (int day = -1; day <= 1; ++day) {
         for (int hour = 0; hour < 24; ++hour) {
             const QDate date(2025, 5, 25 + day);
             const QDateTime referenceDateTime(date, QTime(hour, 0));
-            const KNightTimeCycle exepectedCycle(QDateTime(date, QTime(12, 0)),
-                                                 KNightTimeTransition(KNightTimeTransition::Morning, QDateTime(date, QTime(6, 0)), QDateTime(date, QTime(6, 30))),
-                                                 KNightTimeTransition(KNightTimeTransition::Evening, QDateTime(date, QTime(18, 0)), QDateTime(date, QTime(18, 30))));
+            const KDarkLightCycle exepectedCycle(QDateTime(date, QTime(12, 0)),
+                                                 KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(date, QTime(6, 0)), QDateTime(date, QTime(6, 30))),
+                                                 KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(date, QTime(18, 0)), QDateTime(date, QTime(18, 30))));
 
             QCOMPARE(originalCycle.extrapolated(referenceDateTime), exepectedCycle);
         }
@@ -40,9 +40,9 @@ void CycleTest::extrapolated()
 
 void CycleTest::nextTransition()
 {
-    const KNightTimeCycle cycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
-                                KNightTimeTransition(KNightTimeTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
-                                KNightTimeTransition(KNightTimeTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))));
+    const KDarkLightCycle cycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
+                                KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
+                                KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))));
 
     QCOMPARE(cycle.nextTransition(QDateTime(QDate(2025, 5, 24), QTime(12, 0))), cycle.morning());
 
@@ -63,9 +63,9 @@ void CycleTest::nextTransition()
 
 void CycleTest::previousTransition()
 {
-    const KNightTimeCycle cycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
-                                KNightTimeTransition(KNightTimeTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
-                                KNightTimeTransition(KNightTimeTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))));
+    const KDarkLightCycle cycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
+                                KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
+                                KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))));
 
     QCOMPARE(cycle.previousTransition(QDateTime(QDate(2025, 5, 24), QTime(12, 0))), std::nullopt);
 

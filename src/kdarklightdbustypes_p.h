@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
 #include <QDBusArgument>
 #include <QDebug>
@@ -19,8 +19,8 @@ struct KNightTimeDbusCycle
     qint64 eveningStartTimestamp;
     qint64 eveningEndTimestamp;
 
-    KNightTimeCycle into() const;
-    static KNightTimeDbusCycle from(const KNightTimeCycle &cycle);
+    KDarkLightCycle into() const;
+    static KNightTimeDbusCycle from(const KDarkLightCycle &cycle);
 };
 
 struct KNightTimeDbusSchedule
@@ -28,8 +28,8 @@ struct KNightTimeDbusSchedule
     QString name;
     QDBusVariant data;
 
-    KNightTimeSchedule into() const;
-    static KNightTimeDbusSchedule from(const KNightTimeSchedule &schedule);
+    KDarkLightSchedule into() const;
+    static KNightTimeDbusSchedule from(const KDarkLightSchedule &schedule);
 };
 
 inline const QDBusArgument &operator<<(QDBusArgument &argument, const KNightTimeDbusCycle &cycle)
@@ -74,14 +74,14 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, KNightTime
     return argument;
 }
 
-inline KNightTimeCycle KNightTimeDbusCycle::into() const
+inline KDarkLightCycle KNightTimeDbusCycle::into() const
 {
-    return KNightTimeCycle(QDateTime::fromMSecsSinceEpoch(noonTimestamp),
-                           KNightTimeTransition(KNightTimeTransition::Morning, QDateTime::fromMSecsSinceEpoch(morningStartTimestamp), QDateTime::fromMSecsSinceEpoch(morningEndTimestamp)),
-                           KNightTimeTransition(KNightTimeTransition::Evening, QDateTime::fromMSecsSinceEpoch(eveningStartTimestamp), QDateTime::fromMSecsSinceEpoch(eveningEndTimestamp)));
+    return KDarkLightCycle(QDateTime::fromMSecsSinceEpoch(noonTimestamp),
+                           KDarkLightTransition(KDarkLightTransition::Morning, QDateTime::fromMSecsSinceEpoch(morningStartTimestamp), QDateTime::fromMSecsSinceEpoch(morningEndTimestamp)),
+                           KDarkLightTransition(KDarkLightTransition::Evening, QDateTime::fromMSecsSinceEpoch(eveningStartTimestamp), QDateTime::fromMSecsSinceEpoch(eveningEndTimestamp)));
 }
 
-inline KNightTimeDbusCycle KNightTimeDbusCycle::from(const KNightTimeCycle &cycle)
+inline KNightTimeDbusCycle KNightTimeDbusCycle::from(const KDarkLightCycle &cycle)
 {
     return KNightTimeDbusCycle{
         .noonTimestamp = cycle.noonDateTime().toMSecsSinceEpoch(),
@@ -92,28 +92,28 @@ inline KNightTimeDbusCycle KNightTimeDbusCycle::from(const KNightTimeCycle &cycl
     };
 }
 
-inline KNightTimeSchedule KNightTimeDbusSchedule::into() const
+inline KDarkLightSchedule KNightTimeDbusSchedule::into() const
 {
     if (name != QLatin1String("dynamic")) {
-        return KNightTimeSchedule();
+        return KDarkLightSchedule();
     }
 
     const QList<KNightTimeDbusCycle> dbusCycles = qdbus_cast<QList<KNightTimeDbusCycle>>(data.variant().value<QDBusArgument>());
-    QList<KNightTimeCycle> cycles;
+    QList<KDarkLightCycle> cycles;
     cycles.reserve(dbusCycles.size());
     for (const auto &dbusCycle : dbusCycles) {
         cycles.append(dbusCycle.into());
     }
 
-    return KNightTimeSchedule(cycles);
+    return KDarkLightSchedule(cycles);
 }
 
-inline KNightTimeDbusSchedule KNightTimeDbusSchedule::from(const KNightTimeSchedule &schedule)
+inline KNightTimeDbusSchedule KNightTimeDbusSchedule::from(const KDarkLightSchedule &schedule)
 {
-    const QList<KNightTimeCycle> cycles = schedule.cycles();
+    const QList<KDarkLightCycle> cycles = schedule.cycles();
     QList<KNightTimeDbusCycle> dbusCycles;
     dbusCycles.reserve(cycles.size());
-    for (const KNightTimeCycle &cycle : cycles) {
+    for (const KDarkLightCycle &cycle : cycles) {
         dbusCycles.append(KNightTimeDbusCycle::from(cycle));
     }
 

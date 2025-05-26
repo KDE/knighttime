@@ -17,12 +17,12 @@ to the updates from the daemon.
 Example usage:
 
 ```cpp
-#include <KNightTimeScheduleProvider>
+#include <KDarkLightScheduleProvider>
 #include <KSharedConfig>
 
 auto stateConfig = KSharedConfig::openStateConfig();
-auto provider = new KNightTimeScheduleProvider(stateConfig->group(QStringLiteral("DarkLightCycle")).readEntry(QStringLiteral("State")));
-connect(provider, &KNightTimeScheduleProvider::scheduleChanged, [provider, stateConfig]() {
+auto provider = new KDarkLightScheduleProvider(stateConfig->group(QStringLiteral("DarkLightCycle")).readEntry(QStringLiteral("State")));
+connect(provider, &KDarkLightScheduleProvider::scheduleChanged, [provider, stateConfig]() {
     stateConfig->group(QStringLiteral("DarkLightCycle")).writeEntry(QStringLiteral("State"), provider->state());
     stateConfig->sync();
 

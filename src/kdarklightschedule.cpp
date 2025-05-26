@@ -4,7 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
 #include <KHolidays/SunEvents>
 
@@ -12,7 +12,7 @@
 
 using namespace std::chrono_literals;
 
-QDebug operator<<(QDebug debug, const KNightTimeTransition &transition)
+QDebug operator<<(QDebug debug, const KDarkLightTransition &transition)
 {
     QDebugStateSaver saver(debug);
     debug.nospace();
@@ -23,7 +23,7 @@ QDebug operator<<(QDebug debug, const KNightTimeTransition &transition)
     return debug;
 }
 
-QDebug operator<<(QDebug debug, const KNightTimeCycle &cycle)
+QDebug operator<<(QDebug debug, const KDarkLightCycle &cycle)
 {
     QDebugStateSaver saver(debug);
     debug.nospace();
@@ -34,7 +34,7 @@ QDebug operator<<(QDebug debug, const KNightTimeCycle &cycle)
     return debug;
 }
 
-QDebug operator<<(QDebug debug, const KNightTimeSchedule &schedule)
+QDebug operator<<(QDebug debug, const KDarkLightSchedule &schedule)
 {
     QDebugStateSaver saver(debug);
     debug.nospace();
@@ -42,19 +42,19 @@ QDebug operator<<(QDebug debug, const KNightTimeSchedule &schedule)
     return debug;
 }
 
-KNightTimeTransition::KNightTimeTransition()
+KDarkLightTransition::KDarkLightTransition()
     : m_type(Morning)
 {
 }
 
-KNightTimeTransition::KNightTimeTransition(Type type, const QDateTime &startDateTime, const QDateTime &endDateTime)
+KDarkLightTransition::KDarkLightTransition(Type type, const QDateTime &startDateTime, const QDateTime &endDateTime)
     : m_type(type)
     , m_startDateTime(startDateTime)
     , m_endDateTime(endDateTime)
 {
 }
 
-KNightTimeTransition::Relation KNightTimeTransition::test(const QDateTime &dateTime) const
+KDarkLightTransition::Relation KDarkLightTransition::test(const QDateTime &dateTime) const
 {
     const int tolerance = 60;
     if (dateTime.secsTo(m_startDateTime) > tolerance) {
@@ -66,126 +66,126 @@ KNightTimeTransition::Relation KNightTimeTransition::test(const QDateTime &dateT
     }
 }
 
-qreal KNightTimeTransition::progress(const QDateTime &dateTime) const
+qreal KDarkLightTransition::progress(const QDateTime &dateTime) const
 {
     const qreal elapsed = m_startDateTime.secsTo(dateTime);
     const qreal total = m_startDateTime.secsTo(m_endDateTime);
     return std::clamp<qreal>(elapsed / total, 0.0, 1.0);
 }
 
-KNightTimeTransition::Type KNightTimeTransition::type() const
+KDarkLightTransition::Type KDarkLightTransition::type() const
 {
     return m_type;
 }
 
-QDateTime KNightTimeTransition::startDateTime() const
+QDateTime KDarkLightTransition::startDateTime() const
 {
     return m_startDateTime;
 }
 
-QDateTime KNightTimeTransition::endDateTime() const
+QDateTime KDarkLightTransition::endDateTime() const
 {
     return m_endDateTime;
 }
 
-KNightTimeCycle::KNightTimeCycle()
+KDarkLightCycle::KDarkLightCycle()
 {
 }
 
-KNightTimeCycle::KNightTimeCycle(const QDateTime &noonDateTime, const KNightTimeTransition &morning, const KNightTimeTransition &evening)
+KDarkLightCycle::KDarkLightCycle(const QDateTime &noonDateTime, const KDarkLightTransition &morning, const KDarkLightTransition &evening)
     : m_noonDateTime(noonDateTime)
     , m_morning(morning)
     , m_evening(evening)
 {
 }
 
-KNightTimeCycle KNightTimeCycle::extrapolated(const QDateTime &referenceDateTime) const
+KDarkLightCycle KDarkLightCycle::extrapolated(const QDateTime &referenceDateTime) const
 {
     const QDateTime localReferenceDateTime = referenceDateTime.toLocalTime();
     const QDateTime localNoonDateTime = m_noonDateTime.toLocalTime();
     const QDateTime newNoonDateTime(localReferenceDateTime.date(), localNoonDateTime.time());
 
-    return KNightTimeCycle(newNoonDateTime,
-                           KNightTimeTransition(KNightTimeTransition::Morning,
+    return KDarkLightCycle(newNoonDateTime,
+                           KDarkLightTransition(KDarkLightTransition::Morning,
                                                 newNoonDateTime.addMSecs(-m_morning.startDateTime().msecsTo(m_noonDateTime)),
                                                 newNoonDateTime.addMSecs(-m_morning.endDateTime().msecsTo(m_noonDateTime))),
-                           KNightTimeTransition(KNightTimeTransition::Evening,
+                           KDarkLightTransition(KDarkLightTransition::Evening,
                                                 newNoonDateTime.addMSecs(-m_evening.startDateTime().msecsTo(m_noonDateTime)),
                                                 newNoonDateTime.addMSecs(-m_evening.endDateTime().msecsTo(m_noonDateTime))));
 }
 
-QDateTime KNightTimeCycle::noonDateTime() const
+QDateTime KDarkLightCycle::noonDateTime() const
 {
     return m_noonDateTime;
 }
 
-KNightTimeTransition KNightTimeCycle::morning() const
+KDarkLightTransition KDarkLightCycle::morning() const
 {
     return m_morning;
 }
 
-KNightTimeTransition KNightTimeCycle::evening() const
+KDarkLightTransition KDarkLightCycle::evening() const
 {
     return m_evening;
 }
 
-std::optional<KNightTimeTransition> KNightTimeCycle::nextTransition(const QDateTime &dateTime) const
+std::optional<KDarkLightTransition> KDarkLightCycle::nextTransition(const QDateTime &dateTime) const
 {
     switch (m_morning.test(dateTime)) {
-    case KNightTimeTransition::Upcoming:
+    case KDarkLightTransition::Upcoming:
         return m_morning;
-    case KNightTimeTransition::InProgress:
-    case KNightTimeTransition::Passed:
+    case KDarkLightTransition::InProgress:
+    case KDarkLightTransition::Passed:
         break;
     }
 
     switch (m_evening.test(dateTime)) {
-    case KNightTimeTransition::Upcoming:
+    case KDarkLightTransition::Upcoming:
         return m_evening;
-    case KNightTimeTransition::InProgress:
-    case KNightTimeTransition::Passed:
+    case KDarkLightTransition::InProgress:
+    case KDarkLightTransition::Passed:
         break;
     }
 
     return std::nullopt;
 }
 
-std::optional<KNightTimeTransition> KNightTimeCycle::previousTransition(const QDateTime &dateTime) const
+std::optional<KDarkLightTransition> KDarkLightCycle::previousTransition(const QDateTime &dateTime) const
 {
     switch (m_evening.test(dateTime)) {
-    case KNightTimeTransition::Upcoming:
+    case KDarkLightTransition::Upcoming:
         break;
-    case KNightTimeTransition::InProgress:
-    case KNightTimeTransition::Passed:
+    case KDarkLightTransition::InProgress:
+    case KDarkLightTransition::Passed:
         return m_evening;
     }
 
     switch (m_morning.test(dateTime)) {
-    case KNightTimeTransition::Upcoming:
+    case KDarkLightTransition::Upcoming:
         break;
-    case KNightTimeTransition::InProgress:
-    case KNightTimeTransition::Passed:
+    case KDarkLightTransition::InProgress:
+    case KDarkLightTransition::Passed:
         return m_morning;
     }
 
     return std::nullopt;
 }
 
-KNightTimeSchedule::KNightTimeSchedule()
+KDarkLightSchedule::KDarkLightSchedule()
 {
 }
 
-KNightTimeSchedule::KNightTimeSchedule(const QList<KNightTimeCycle> &cycles)
+KDarkLightSchedule::KDarkLightSchedule(const QList<KDarkLightCycle> &cycles)
     : m_cycles(cycles)
 {
 }
 
-QList<KNightTimeCycle> KNightTimeSchedule::cycles() const
+QList<KDarkLightCycle> KDarkLightSchedule::cycles() const
 {
     return m_cycles;
 }
 
-static std::pair<int, std::chrono::milliseconds> closestCycle(const QList<KNightTimeCycle> &cycles, const QDateTime &dateTime)
+static std::pair<int, std::chrono::milliseconds> closestCycle(const QList<KDarkLightCycle> &cycles, const QDateTime &dateTime)
 {
     int bestIndex = -1;
     std::chrono::milliseconds bestScore;
@@ -201,7 +201,7 @@ static std::pair<int, std::chrono::milliseconds> closestCycle(const QList<KNight
     return std::make_pair(bestIndex, bestScore);
 }
 
-std::optional<KNightTimeTransition> KNightTimeSchedule::previousTransition(const QDateTime &referenceDateTime) const
+std::optional<KDarkLightTransition> KDarkLightSchedule::previousTransition(const QDateTime &referenceDateTime) const
 {
     const auto [index, diff] = closestCycle(m_cycles, referenceDateTime);
     if (index == -1) {
@@ -228,10 +228,10 @@ std::optional<KNightTimeTransition> KNightTimeSchedule::previousTransition(const
     }
 
     const auto extrapolatedEvening = extrapolatedCycle.evening();
-    return KNightTimeTransition(extrapolatedEvening.type(), extrapolatedEvening.startDateTime().addDays(-1), extrapolatedEvening.endDateTime().addDays(-1));
+    return KDarkLightTransition(extrapolatedEvening.type(), extrapolatedEvening.startDateTime().addDays(-1), extrapolatedEvening.endDateTime().addDays(-1));
 }
 
-std::optional<KNightTimeTransition> KNightTimeSchedule::nextTransition(const QDateTime &referenceDateTime) const
+std::optional<KDarkLightTransition> KDarkLightSchedule::nextTransition(const QDateTime &referenceDateTime) const
 {
     const auto [index, diff] = closestCycle(m_cycles, referenceDateTime);
     if (index == -1) {
@@ -258,10 +258,10 @@ std::optional<KNightTimeTransition> KNightTimeSchedule::nextTransition(const QDa
     }
 
     const auto extrapolatedMorning = extrapolatedCycle.morning();
-    return KNightTimeTransition(extrapolatedMorning.type(), extrapolatedMorning.startDateTime().addDays(1), extrapolatedMorning.endDateTime().addDays(1));
+    return KDarkLightTransition(extrapolatedMorning.type(), extrapolatedMorning.startDateTime().addDays(1), extrapolatedMorning.endDateTime().addDays(1));
 }
 
-static std::optional<KNightTimeTransition> deserializeTransition(QDataStream &stream)
+static std::optional<KDarkLightTransition> deserializeTransition(QDataStream &stream)
 {
     int type;
     qint64 start;
@@ -274,22 +274,22 @@ static std::optional<KNightTimeTransition> deserializeTransition(QDataStream &st
     }
 
     switch (type) {
-    case KNightTimeTransition::Morning:
-    case KNightTimeTransition::Evening:
+    case KDarkLightTransition::Morning:
+    case KDarkLightTransition::Evening:
         break;
     default:
         return std::nullopt;
     }
 
-    return KNightTimeTransition(KNightTimeTransition::Type(type), QDateTime::fromMSecsSinceEpoch(start), QDateTime::fromMSecsSinceEpoch(end));
+    return KDarkLightTransition(KDarkLightTransition::Type(type), QDateTime::fromMSecsSinceEpoch(start), QDateTime::fromMSecsSinceEpoch(end));
 }
 
-static void serializeTransition(QDataStream &stream, const KNightTimeTransition &transition)
+static void serializeTransition(QDataStream &stream, const KDarkLightTransition &transition)
 {
     stream << int(transition.type()) << transition.startDateTime().toMSecsSinceEpoch() << transition.endDateTime().toMSecsSinceEpoch();
 }
 
-static std::optional<KNightTimeCycle> deserializeCycle(QDataStream &stream)
+static std::optional<KDarkLightCycle> deserializeCycle(QDataStream &stream)
 {
     qint64 noon;
     stream >> noon;
@@ -307,17 +307,17 @@ static std::optional<KNightTimeCycle> deserializeCycle(QDataStream &stream)
         return std::nullopt;
     }
 
-    return KNightTimeCycle(QDateTime::fromMSecsSinceEpoch(noon), *morning, *evening);
+    return KDarkLightCycle(QDateTime::fromMSecsSinceEpoch(noon), *morning, *evening);
 }
 
-static void serializeCycle(QDataStream &stream, const KNightTimeCycle &cycle)
+static void serializeCycle(QDataStream &stream, const KDarkLightCycle &cycle)
 {
     stream << cycle.noonDateTime().toMSecsSinceEpoch();
     serializeTransition(stream, cycle.morning());
     serializeTransition(stream, cycle.evening());
 }
 
-static std::optional<KNightTimeSchedule> deserializeSchedule(QDataStream &stream)
+static std::optional<KDarkLightSchedule> deserializeSchedule(QDataStream &stream)
 {
     int version;
     stream >> version;
@@ -325,7 +325,7 @@ static std::optional<KNightTimeSchedule> deserializeSchedule(QDataStream &stream
         return std::nullopt;
     }
 
-    QList<KNightTimeCycle> cycles;
+    QList<KDarkLightCycle> cycles;
     int size;
     stream >> size;
     for (int i = 0; i < size; ++i) {
@@ -336,10 +336,10 @@ static std::optional<KNightTimeSchedule> deserializeSchedule(QDataStream &stream
         cycles.append(*cycle);
     }
 
-    return KNightTimeSchedule(cycles);
+    return KDarkLightSchedule(cycles);
 }
 
-static void serializeSchedule(QDataStream &stream, const KNightTimeSchedule &schedule)
+static void serializeSchedule(QDataStream &stream, const KDarkLightSchedule &schedule)
 {
     stream << 1; // version
 
@@ -350,7 +350,7 @@ static void serializeSchedule(QDataStream &stream, const KNightTimeSchedule &sch
     }
 }
 
-QString KNightTimeSchedule::toState() const
+QString KDarkLightSchedule::toState() const
 {
     if (m_cycles.isEmpty()) {
         return QString();
@@ -366,7 +366,7 @@ QString KNightTimeSchedule::toState() const
     return QString::fromLatin1(byteArray.toBase64());
 }
 
-std::optional<KNightTimeSchedule> KNightTimeSchedule::fromState(const QString &state)
+std::optional<KDarkLightSchedule> KDarkLightSchedule::fromState(const QString &state)
 {
     if (state.isEmpty()) {
         return std::nullopt;
@@ -376,9 +376,9 @@ std::optional<KNightTimeSchedule> KNightTimeSchedule::fromState(const QString &s
     return deserializeSchedule(stream);
 }
 
-KNightTimeSchedule KNightTimeSchedule::forecast(const QDateTime &dateTime, const QTime &morning, const QTime &evening, std::chrono::milliseconds transitionDuration, int cycleCount)
+KDarkLightSchedule KDarkLightSchedule::forecast(const QDateTime &dateTime, const QTime &morning, const QTime &evening, std::chrono::milliseconds transitionDuration, int cycleCount)
 {
-    QList<KNightTimeCycle> cycles;
+    QList<KDarkLightCycle> cycles;
     cycles.reserve(cycleCount + 1);
 
     const int halfOfDaylight = morning.secsTo(evening) / 2;
@@ -393,17 +393,17 @@ KNightTimeSchedule KNightTimeSchedule::forecast(const QDateTime &dateTime, const
         const QDateTime startOfEvening = noonDataTime.addSecs(halfOfDaylight);
         const QDateTime endOfEvening = startOfEvening + transitionDuration;
 
-        cycles.append(KNightTimeCycle(noonDataTime,
-                                      KNightTimeTransition(KNightTimeTransition::Morning, startOfMorning, endOfMorning),
-                                      KNightTimeTransition(KNightTimeTransition::Evening, startOfEvening, endOfEvening)));
+        cycles.append(KDarkLightCycle(noonDataTime,
+                                      KDarkLightTransition(KDarkLightTransition::Morning, startOfMorning, endOfMorning),
+                                      KDarkLightTransition(KDarkLightTransition::Evening, startOfEvening, endOfEvening)));
     }
 
-    return KNightTimeSchedule(cycles);
+    return KDarkLightSchedule(cycles);
 }
 
-std::optional<KNightTimeSchedule> KNightTimeSchedule::forecast(const QDateTime &dateTime, qreal latitude, qreal longitude, int cycleCount)
+std::optional<KDarkLightSchedule> KDarkLightSchedule::forecast(const QDateTime &dateTime, qreal latitude, qreal longitude, int cycleCount)
 {
-    QList<KNightTimeCycle> cycles;
+    QList<KDarkLightCycle> cycles;
     cycles.reserve(cycleCount + 1);
 
     for (int day = -1; day < cycleCount; ++day) {
@@ -429,10 +429,10 @@ std::optional<KNightTimeSchedule> KNightTimeSchedule::forecast(const QDateTime &
             return std::nullopt;
         }
 
-        cycles.append(KNightTimeCycle(sunEvents.solarNoon(),
-                                      KNightTimeTransition(KNightTimeTransition::Morning, civilDawn, sunrise),
-                                      KNightTimeTransition(KNightTimeTransition::Evening, sunset, civilDusk)));
+        cycles.append(KDarkLightCycle(sunEvents.solarNoon(),
+                                      KDarkLightTransition(KDarkLightTransition::Morning, civilDawn, sunrise),
+                                      KDarkLightTransition(KDarkLightTransition::Evening, sunset, civilDusk)));
     }
 
-    return KNightTimeSchedule(cycles);
+    return KDarkLightSchedule(cycles);
 }

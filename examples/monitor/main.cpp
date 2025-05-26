@@ -7,16 +7,16 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-#include "knighttimescheduleprovider.h"
+#include "kdarklightscheduleprovider.h"
 
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
 
-    KNightTimeScheduleProvider provider;
+    KDarkLightScheduleProvider provider;
 
     qDebug() << provider.schedule();
-    QObject::connect(&provider, &KNightTimeScheduleProvider::scheduleChanged, [&provider]() {
+    QObject::connect(&provider, &KDarkLightScheduleProvider::scheduleChanged, [&provider]() {
         qDebug() << provider.schedule();
     });
 

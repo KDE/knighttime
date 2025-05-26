@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
-class KNightTimeScheduler
+class KDarkLightScheduler
 {
 public:
-    virtual ~KNightTimeScheduler();
+    virtual ~KDarkLightScheduler();
 
-    virtual KNightTimeSchedule schedule(const QDateTime &referenceDateTime) = 0;
+    virtual KDarkLightSchedule schedule(const QDateTime &referenceDateTime) = 0;
 };

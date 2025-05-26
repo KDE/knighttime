@@ -6,25 +6,25 @@
 
 #pragma once
 
-#include "knighttimescheduler.h"
+#include "kdarklightscheduler.h"
 
 #include <QGeoPositionInfoSource>
 #include <QTimer>
 
-class KNightTimeManagerInterface;
-class KNightTimeSettings;
-class KNightTimeState;
+class KDarkLightManagerInterface;
+class KDarkLightSettings;
+class KDarkLightState;
 class KSystemClockSkewNotifier;
 
-class KNightTimeManager : public QObject
+class KDarkLightManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit KNightTimeManager(QObject *parent = nullptr);
-    ~KNightTimeManager() override;
+    explicit KDarkLightManager(QObject *parent = nullptr);
+    ~KDarkLightManager() override;
 
-    KNightTimeSchedule schedule() const;
+    KDarkLightSchedule schedule() const;
 
     void reconfigure();
     void reschedule();
@@ -33,12 +33,12 @@ Q_SIGNALS:
     void scheduleChanged();
 
 private:
-    std::unique_ptr<KNightTimeManagerInterface> m_dbusInterface;
-    std::unique_ptr<KNightTimeSettings> m_settings;
-    std::unique_ptr<KNightTimeState> m_state;
-    std::unique_ptr<KNightTimeScheduler> m_scheduler;
+    std::unique_ptr<KDarkLightManagerInterface> m_dbusInterface;
+    std::unique_ptr<KDarkLightSettings> m_settings;
+    std::unique_ptr<KDarkLightState> m_state;
+    std::unique_ptr<KDarkLightScheduler> m_scheduler;
     std::unique_ptr<KSystemClockSkewNotifier> m_skewNotifier;
     std::unique_ptr<QGeoPositionInfoSource> m_positionInfoSource;
     std::unique_ptr<QTimer> m_scheduleTimer;
-    KNightTimeSchedule m_schedule;
+    KDarkLightSchedule m_schedule;
 };

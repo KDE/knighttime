@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 
-#include "knighttimeschedulesubscription_p.h"
-#include "knighttimedbustypes_p.h"
+#include "kdarklightschedulesubscription_p.h"
+#include "kdarklightdbustypes_p.h"
 #include "knighttimelogging.h"
 
 #include <QCoreApplication>
@@ -15,20 +15,20 @@
 #include <QDBusPendingReply>
 #include <QPointer>
 
-std::shared_ptr<KNightTimeScheduleSubscription> KNightTimeScheduleSubscription::globalSubscription()
+std::shared_ptr<KDarkLightScheduleSubscription> KDarkLightScheduleSubscription::globalSubscription()
 {
-    static std::weak_ptr<KNightTimeScheduleSubscription> singleton;
+    static std::weak_ptr<KDarkLightScheduleSubscription> singleton;
     if (auto subscription = singleton.lock()) {
         return subscription;
     }
 
-    auto subscription = std::make_shared<KNightTimeScheduleSubscription>();
+    auto subscription = std::make_shared<KDarkLightScheduleSubscription>();
     singleton = subscription;
 
     return subscription;
 }
 
-KNightTimeScheduleSubscription::KNightTimeScheduleSubscription(QObject *parent)
+KDarkLightScheduleSubscription::KDarkLightScheduleSubscription(QObject *parent)
     : QObject(parent)
 {
     QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Refreshed"), this, SLOT(OnRefreshed(QVariantMap)));
@@ -58,7 +58,7 @@ KNightTimeScheduleSubscription::KNightTimeScheduleSubscription(QObject *parent)
     });
 }
 
-KNightTimeScheduleSubscription::~KNightTimeScheduleSubscription()
+KDarkLightScheduleSubscription::~KDarkLightScheduleSubscription()
 {
     if (m_cookie) {
         auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Unsubscribe"));
@@ -66,17 +66,17 @@ KNightTimeScheduleSubscription::~KNightTimeScheduleSubscription()
     }
 }
 
-std::optional<KNightTimeSchedule> KNightTimeScheduleSubscription::schedule() const
+std::optional<KDarkLightSchedule> KDarkLightScheduleSubscription::schedule() const
 {
     return m_schedule;
 }
 
-QString KNightTimeScheduleSubscription::state() const
+QString KDarkLightScheduleSubscription::state() const
 {
     return m_state;
 }
 
-void KNightTimeScheduleSubscription::OnSubscribed(const QVariantMap &data)
+void KDarkLightScheduleSubscription::OnSubscribed(const QVariantMap &data)
 {
     if (auto it = data.find(QStringLiteral("Cookie")); it != data.end()) {
         m_cookie = it->toUInt();
@@ -92,14 +92,14 @@ void KNightTimeScheduleSubscription::OnSubscribed(const QVariantMap &data)
     }
 }
 
-void KNightTimeScheduleSubscription::OnRefreshed(const QVariantMap &data)
+void KDarkLightScheduleSubscription::OnRefreshed(const QVariantMap &data)
 {
     if (m_cookie) {
         update(data[QStringLiteral("Schedule")]);
     }
 }
 
-void KNightTimeScheduleSubscription::update(const QVariant &data)
+void KDarkLightScheduleSubscription::update(const QVariant &data)
 {
     const auto dbusSchedule = qdbus_cast<KNightTimeDbusSchedule>(data.value<QDBusArgument>());
     m_schedule = dbusSchedule.into();

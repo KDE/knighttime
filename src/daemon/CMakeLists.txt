@@ -5,23 +5,23 @@
 add_executable(knighttimed)
 
 kconfig_target_kcfg_file(knighttimed
-    FILE knighttimesettings.kcfg
-    CLASS_NAME KNightTimeSettings
+    FILE kdarklightsettings.kcfg
+    CLASS_NAME KDarkLightSettings
     GENERATE_MOC
 )
 
 kconfig_target_kcfg_file(knighttimed
-    FILE knighttimestate.kcfg
-    CLASS_NAME KNightTimeState
+    FILE kdarklightstate.kcfg
+    CLASS_NAME KDarkLightState
     MUTATORS
 )
 
 target_sources(knighttimed PRIVATE
-    knighttimemanager.cpp
-    knighttimemanagerinterface.cpp
-    knighttimescheduler.cpp
-    ksolarnighttimescheduler.cpp
-    ktimednighttimescheduler.cpp
+    kdarklightmanager.cpp
+    kdarklightmanagerinterface.cpp
+    kdarklightscheduler.cpp
+    ksolardarklightscheduler.cpp
+    ktimeddarklightscheduler.cpp
     main.cpp
 )
 

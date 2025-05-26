@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "knighttimeschedule.h"
-#include "knighttimeschedulesubscription_p.h"
+#include "kdarklightschedule.h"
+#include "kdarklightschedulesubscription_p.h"
 
-class KNightTimeScheduleProviderPrivate
+class KDarkLightScheduleProviderPrivate
 {
 public:
-    KNightTimeSchedule schedule;
+    KDarkLightSchedule schedule;
     QString state;
-    std::shared_ptr<KNightTimeScheduleSubscription> subscription;
+    std::shared_ptr<KDarkLightScheduleSubscription> subscription;
 };

@@ -19,9 +19,9 @@ target_include_directories(KNightTime
 )
 
 target_sources(KNightTime PRIVATE
-    knighttimeschedule.cpp
-    knighttimescheduleprovider.cpp
-    knighttimeschedulesubscription.cpp
+    kdarklightschedule.cpp
+    kdarklightscheduleprovider.cpp
+    kdarklightschedulesubscription.cpp
 )
 
 target_link_libraries(KNightTime
@@ -53,8 +53,8 @@ ecm_generate_qdoc(KNightTime knighttime.qdocconf)
 
 ecm_generate_headers(KNightTime_HEADERS
     HEADER_NAMES
-        KNightTimeSchedule
-        KNightTimeScheduleProvider
+        KDarkLightSchedule
+        KDarkLightScheduleProvider
     REQUIRED_HEADERS KCoreAddons_HEADERS
 )
 
@@ -62,8 +62,8 @@ install(
     FILES
         ${KNightTime_HEADERS}
         ${CMAKE_CURRENT_BINARY_DIR}/knighttime_export.h
-        knighttimeschedule.h
-        knighttimescheduleprovider.h
+        kdarklightschedule.h
+        kdarklightscheduleprovider.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KNightTime COMPONENT Devel
 )
 

@@ -6,22 +6,22 @@
 
 #pragma once
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
 #include <QObject>
 
-class KNightTimeScheduleSubscription : public QObject
+class KDarkLightScheduleSubscription : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit KNightTimeScheduleSubscription(QObject *parent = nullptr);
-    ~KNightTimeScheduleSubscription() override;
+    explicit KDarkLightScheduleSubscription(QObject *parent = nullptr);
+    ~KDarkLightScheduleSubscription() override;
 
-    std::optional<KNightTimeSchedule> schedule() const;
+    std::optional<KDarkLightSchedule> schedule() const;
     QString state() const;
 
-    static std::shared_ptr<KNightTimeScheduleSubscription> globalSubscription();
+    static std::shared_ptr<KDarkLightScheduleSubscription> globalSubscription();
 
 Q_SIGNALS:
     void refreshed();
@@ -33,7 +33,7 @@ private Q_SLOTS:
 private:
     void update(const QVariant &data);
 
-    std::optional<KNightTimeSchedule> m_schedule;
+    std::optional<KDarkLightSchedule> m_schedule;
     QString m_state;
     std::optional<uint> m_cookie;
 };

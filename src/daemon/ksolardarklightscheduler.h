@@ -6,18 +6,18 @@
 
 #pragma once
 
-#include "knighttimescheduler.h"
+#include "kdarklightscheduler.h"
 
 #include <QGeoCoordinate>
 
-class KSolarNightTimeScheduler : public KNightTimeScheduler
+class KSolarDarkLightScheduler : public KDarkLightScheduler
 {
 public:
-    explicit KSolarNightTimeScheduler(const QGeoCoordinate &coordinate);
+    explicit KSolarDarkLightScheduler(const QGeoCoordinate &coordinate);
 
     QGeoCoordinate coordinate() const;
 
-    KNightTimeSchedule schedule(const QDateTime &referenceDateTime) override;
+    KDarkLightSchedule schedule(const QDateTime &referenceDateTime) override;
 
 private:
     QGeoCoordinate m_coordinate;

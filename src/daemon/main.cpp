@@ -8,7 +8,7 @@
 
 #include <KDBusService>
 
-#include "knighttimemanager.h"
+#include "kdarklightmanager.h"
 
 int main(int argc, char **argv)
 {
@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     app.setApplicationName(QStringLiteral("NightTime"));
     app.setOrganizationDomain(QStringLiteral("kde.org"));
 
-    KNightTimeManager daemon;
+    KDarkLightManager daemon;
     daemon.reconfigure();
 
     KDBusService dbusService(KDBusService::Unique);

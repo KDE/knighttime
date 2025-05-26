@@ -11,18 +11,18 @@
 #include <QObject>
 #include <QVariant>
 
-class KNightTimeCycle;
-class KNightTimeManager;
-class KNightTimeSchedule;
+class KDarkLightCycle;
+class KDarkLightManager;
+class KDarkLightSchedule;
 
-class KNightTimeManagerInterface : public QObject, public QDBusContext
+class KDarkLightManagerInterface : public QObject, public QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.NightTime.Manager")
     Q_PROPERTY(uint Version READ version)
 
 public:
-    explicit KNightTimeManagerInterface(KNightTimeManager *manager, QObject *parent = nullptr);
+    explicit KDarkLightManagerInterface(KDarkLightManager *manager, QObject *parent = nullptr);
 
     uint version() const;
 
@@ -38,7 +38,7 @@ private Q_SLOTS:
     void OnServiceUnregistered(const QString &serviceName);
 
 private:
-    KNightTimeManager *m_manager;
+    KDarkLightManager *m_manager;
     QDBusServiceWatcher *m_serviceWatcher;
     QMultiMap<QString, uint> m_subscribers;
     uint m_lastCookie = 0;

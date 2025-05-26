@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include "knighttimescheduler.h"
+#include "kdarklightscheduler.h"
 
-class KTimedNightTimeScheduler : public KNightTimeScheduler
+class KTimedDarkLightScheduler : public KDarkLightScheduler
 {
 public:
-    KTimedNightTimeScheduler(const QTime &sunriseStart, const QTime &sunsetStart, int transitionDuration);
+    KTimedDarkLightScheduler(const QTime &sunriseStart, const QTime &sunsetStart, int transitionDuration);
 
-    KNightTimeSchedule schedule(const QDateTime &referenceDateTime) override;
+    KDarkLightSchedule schedule(const QDateTime &referenceDateTime) override;
 
 private:
     QTime m_sunriseStart;

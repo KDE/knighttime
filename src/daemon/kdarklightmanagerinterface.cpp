@@ -4,15 +4,15 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-#include "knighttimemanagerinterface.h"
-#include "knighttimedbustypes_p.h"
-#include "knighttimemanager.h"
+#include "kdarklightmanagerinterface.h"
+#include "kdarklightdbustypes_p.h"
+#include "kdarklightmanager.h"
 
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusMetaType>
 
-KNightTimeManagerInterface::KNightTimeManagerInterface(KNightTimeManager *manager, QObject *parent)
+KDarkLightManagerInterface::KDarkLightManagerInterface(KDarkLightManager *manager, QObject *parent)
     : QObject(parent)
     , m_manager(manager)
     , m_serviceWatcher(new QDBusServiceWatcher(this))
@@ -21,20 +21,20 @@ KNightTimeManagerInterface::KNightTimeManagerInterface(KNightTimeManager *manage
     qDBusRegisterMetaType<QList<KNightTimeDbusCycle>>();
     qDBusRegisterMetaType<KNightTimeDbusSchedule>();
 
-    connect(m_manager, &KNightTimeManager::scheduleChanged, this, &KNightTimeManagerInterface::OnScheduleChanged);
+    connect(m_manager, &KDarkLightManager::scheduleChanged, this, &KDarkLightManagerInterface::OnScheduleChanged);
 
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
-    connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &KNightTimeManagerInterface::OnServiceUnregistered);
+    connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &KDarkLightManagerInterface::OnServiceUnregistered);
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/NightTime/Manager"), this, QDBusConnection::ExportScriptableContents);
 }
 
-uint KNightTimeManagerInterface::version() const
+uint KDarkLightManagerInterface::version() const
 {
     return 1;
 }
 
-QVariantMap KNightTimeManagerInterface::Subscribe(const QVariantMap &options)
+QVariantMap KDarkLightManagerInterface::Subscribe(const QVariantMap &options)
 {
     const QString subscriber = message().service();
     m_serviceWatcher->addWatchedService(subscriber);
@@ -48,7 +48,7 @@ QVariantMap KNightTimeManagerInterface::Subscribe(const QVariantMap &options)
     };
 }
 
-void KNightTimeManagerInterface::Unsubscribe(uint cookie)
+void KDarkLightManagerInterface::Unsubscribe(uint cookie)
 {
     const QString subscriber = message().service();
     if (!m_subscribers.remove(subscriber, cookie)) {
@@ -60,13 +60,13 @@ void KNightTimeManagerInterface::Unsubscribe(uint cookie)
     }
 }
 
-void KNightTimeManagerInterface::OnServiceUnregistered(const QString &serviceName)
+void KDarkLightManagerInterface::OnServiceUnregistered(const QString &serviceName)
 {
     m_serviceWatcher->removeWatchedService(serviceName);
     m_subscribers.remove(serviceName);
 }
 
-void KNightTimeManagerInterface::OnScheduleChanged()
+void KDarkLightManagerInterface::OnScheduleChanged()
 {
     const auto subscribers = m_serviceWatcher->watchedServices();
     if (subscribers.isEmpty()) {

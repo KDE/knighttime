@@ -6,21 +6,21 @@
 
 #pragma once
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
-class KNightTimeScheduleProviderPrivate;
+class KDarkLightScheduleProviderPrivate;
 
 /*!
- * \class KNightTimeScheduleProvider
+ * \class KDarkLightScheduleProvider
  * \inmodule KNightTime
- * \brief The KNightTimeScheduleProvider provides a convenient way to retrieve and manage dark-light cycle schedule.
+ * \brief The KDarkLightScheduleProvider provides a convenient way to retrieve and manage dark-light cycle schedule.
  *
  * Example usage:
  *
  * \code
  * auto stateConfig = KSharedConfig::openStateConfig();
- * auto provider = new KNightTimeScheduleProvider(stateConfig->group(QStringLiteral("DarkLightCycle")).readEntry(QStringLiteral("State")));
- * connect(provider, &KNightTimeScheduleProvider::scheduleChanged, [provider, stateConfig]() {
+ * auto provider = new KDarkLightScheduleProvider(stateConfig->group(QStringLiteral("DarkLightCycle")).readEntry(QStringLiteral("State")));
+ * connect(provider, &KDarkLightScheduleProvider::scheduleChanged, [provider, stateConfig]() {
  *     stateConfig->group(QStringLiteral("DarkLightCycle")).writeEntry(QStringLiteral("State"), provider->state());
  *     stateConfig->sync();
  *
@@ -30,7 +30,7 @@ class KNightTimeScheduleProviderPrivate;
  * qDebug() << "next transition:" << provider->schedule().nextTransition(QDateTime::currentDateTime());
  * \endcode
  */
-class KNIGHTTIME_EXPORT KNightTimeScheduleProvider : public QObject
+class KNIGHTTIME_EXPORT KDarkLightScheduleProvider : public QObject
 {
     Q_OBJECT
 
@@ -43,13 +43,13 @@ public:
      * is retrieved asynchronously. With the default schedule, morning lasts from 6:00AM to 6:30AM,
      * and evening lasts from 6:00PM to 6:30PM.
      */
-    explicit KNightTimeScheduleProvider(const QString &state = QString(), QObject *parent = nullptr);
-    ~KNightTimeScheduleProvider();
+    explicit KDarkLightScheduleProvider(const QString &state = QString(), QObject *parent = nullptr);
+    ~KDarkLightScheduleProvider();
 
     /*!
      * Returns the dark-light cycle schedule.
      */
-    KNightTimeSchedule schedule() const;
+    KDarkLightSchedule schedule() const;
 
     /*!
      * Returns the dark-light cycle schedule state. The state string can be stored in a state config
@@ -65,5 +65,5 @@ Q_SIGNALS:
     void scheduleChanged();
 
 private:
-    std::unique_ptr<KNightTimeScheduleProviderPrivate> d;
+    std::unique_ptr<KDarkLightScheduleProviderPrivate> d;
 };

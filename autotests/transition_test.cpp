@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QTest>
 
-#include "knighttimeschedule.h"
+#include "kdarklightschedule.h"
 
 class TransitionTest : public QObject
 {
@@ -20,21 +20,21 @@ private Q_SLOTS:
 
 void TransitionTest::relation()
 {
-    const KNightTimeTransition transition(KNightTimeTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30)));
+    const KDarkLightTransition transition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30)));
 
-    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(5, 0))), KNightTimeTransition::Upcoming);
-    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 26), QTime(5, 0))), KNightTimeTransition::Passed);
+    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(5, 0))), KDarkLightTransition::Upcoming);
+    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 26), QTime(5, 0))), KDarkLightTransition::Passed);
 
-    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(6, 0))), KNightTimeTransition::InProgress);
-    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(6, 15))), KNightTimeTransition::InProgress);
-    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(6, 30))), KNightTimeTransition::Passed);
+    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(6, 0))), KDarkLightTransition::InProgress);
+    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(6, 15))), KDarkLightTransition::InProgress);
+    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(6, 30))), KDarkLightTransition::Passed);
 
-    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(7, 0))), KNightTimeTransition::Passed);
+    QCOMPARE(transition.test(QDateTime(QDate(2025, 5, 25), QTime(7, 0))), KDarkLightTransition::Passed);
 }
 
 void TransitionTest::progress()
 {
-    const KNightTimeTransition transition(KNightTimeTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30)));
+    const KDarkLightTransition transition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30)));
 
     QCOMPARE(transition.progress(QDateTime(QDate(2025, 5, 25), QTime(5, 0))), 0.0);
     QCOMPARE(transition.progress(QDateTime(QDate(2025, 5, 25), QTime(6, 0))), 0.0);
