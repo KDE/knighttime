@@ -106,3 +106,5 @@ void KDarkLightScheduleSubscription::update(const QVariant &data)
     m_state = m_schedule->toState();
     Q_EMIT refreshed();
 }
+
+#include "moc_kdarklightschedulesubscription_p.cpp"

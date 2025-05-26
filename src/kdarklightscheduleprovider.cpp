@@ -46,3 +46,5 @@ QString KDarkLightScheduleProvider::state() const
 {
     return d->state;
 }
+
+#include "moc_kdarklightscheduleprovider.cpp"

@@ -104,3 +104,5 @@ void KDarkLightManager::reschedule()
         Q_EMIT scheduleChanged();
     }
 }
+
+#include "moc_kdarklightmanager.cpp"

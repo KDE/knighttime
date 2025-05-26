@@ -83,3 +83,5 @@ void KDarkLightManagerInterface::OnScheduleChanged()
         QDBusConnection::sessionBus().send(signal);
     }
 }
+
+#include "moc_kdarklightmanagerinterface.cpp"
