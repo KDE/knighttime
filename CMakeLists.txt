@@ -83,6 +83,8 @@ install(
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}" COMPONENT Devel
 )
 
+install(EXPORT KNightTimeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KNightTimeTargets.cmake)
+
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
