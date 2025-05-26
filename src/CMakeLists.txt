@@ -12,6 +12,10 @@ set_target_properties(KNightTime PROPERTIES
     EXPORT_NAME KNightTime
 )
 
+target_compile_definitions(KNightTime PRIVATE
+    -DTRANSLATION_DOMAIN=\"knighttime\"
+)
+
 target_include_directories(KNightTime
     PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"

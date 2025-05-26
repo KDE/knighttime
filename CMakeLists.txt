@@ -47,6 +47,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     CoreAddons
     DBusAddons
     Holidays
+    I18n
 )
 
 check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTED)
@@ -61,7 +62,6 @@ endif()
 
 add_subdirectory(src)
 
-# create a Config.cmake and a ConfigVersion.cmake file and install them
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KNightTime")
 
 write_basic_package_version_file(
@@ -84,6 +84,8 @@ install(
 )
 
 install(EXPORT KNightTimeTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KNightTimeTargets.cmake)
+
+ki18n_install(po)
 
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})

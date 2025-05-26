@@ -16,6 +16,10 @@ kconfig_target_kcfg_file(knighttimed
     MUTATORS
 )
 
+target_compile_definitions(knighttimed PRIVATE
+    -DTRANSLATION_DOMAIN=\"knighttimed\"
+)
+
 target_sources(knighttimed PRIVATE
     kdarklightmanager.cpp
     kdarklightmanagerinterface.cpp
