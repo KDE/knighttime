@@ -4,7 +4,7 @@
 include($KDE_DOCS/global/qt-module-defaults.qdocconf)
 
 project = KNightTime
-description = Dark-light cycle schedule
+description = Helpers for scheduling the dark-light cycle
 
 documentationinheaders = true
 

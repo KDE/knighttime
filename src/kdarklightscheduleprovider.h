@@ -13,7 +13,8 @@ class KDarkLightScheduleProviderPrivate;
 /*!
  * \class KDarkLightScheduleProvider
  * \inmodule KNightTime
- * \brief The KDarkLightScheduleProvider provides a convenient way to retrieve and manage dark-light cycle schedule.
+ * \brief The KDarkLightScheduleProvider provides a convenient way to retrieve the schedule
+ * of the dark-light cycle.
  *
  * Example usage:
  *
@@ -47,12 +48,12 @@ public:
     ~KDarkLightScheduleProvider();
 
     /*!
-     * Returns the dark-light cycle schedule.
+     * Returns the schedule of the dark-light cycle.
      */
     KDarkLightSchedule schedule() const;
 
     /*!
-     * Returns the dark-light cycle schedule state. The state string can be stored in a state config
+     * Returns the corresponding state string. The state string can be stored in a state config
      * to restore the schedule after a reboot. It can be used to reduce the number of unnecessary animations
      * at system startup.
      */

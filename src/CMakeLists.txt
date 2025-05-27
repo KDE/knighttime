@@ -43,7 +43,7 @@ ecm_qt_declare_logging_category(KNightTime
     IDENTIFIER KNIGHTTIME
     CATEGORY_NAME knighttime
     DEFAULT_SEVERITY Warning
-    DESCRIPTION "Dark-light cycle schedule"
+    DESCRIPTION "Helpers for scheduling the dark-light cycle"
     EXPORT KNightTime
 )
 

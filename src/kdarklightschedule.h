@@ -150,7 +150,7 @@ private:
 /*!
  * \class KDarkLightSchedule
  * \inmodule KNightTime
- * \brief The KDarkLightSchedule type represents a dark-light cycle schedule.
+ * \brief The KDarkLightSchedule type represents a schedule for the dark-light cycle.
  *
  * Example usage:
  *
