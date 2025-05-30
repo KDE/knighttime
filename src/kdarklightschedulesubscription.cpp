@@ -52,7 +52,7 @@ KDarkLightScheduleSubscription::KDarkLightScheduleSubscription(QObject *parent)
             self->OnSubscribed(reply.value());
         } else {
             auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Unsubscribe"));
-            message.setArguments({reply.value()[QStringLiteral("Cookie")]});
+            message.setArguments({reply.value().value(QStringLiteral("Cookie"))});
             QDBusConnection::sessionBus().asyncCall(message);
         }
     });
