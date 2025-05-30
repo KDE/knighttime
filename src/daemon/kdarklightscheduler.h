@@ -10,7 +10,10 @@
 
 class KDarkLightScheduler
 {
+    Q_DISABLE_COPY(KDarkLightScheduler)
+
 public:
+    explicit KDarkLightScheduler();
     virtual ~KDarkLightScheduler();
 
     virtual KDarkLightSchedule schedule(const QDateTime &referenceDateTime) = 0;

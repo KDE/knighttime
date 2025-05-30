@@ -6,6 +6,10 @@
 
 #include "kdarklightscheduler.h"
 
+KDarkLightScheduler::KDarkLightScheduler()
+{
+}
+
 KDarkLightScheduler::~KDarkLightScheduler()
 {
 }
