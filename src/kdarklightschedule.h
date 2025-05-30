@@ -209,7 +209,7 @@ public:
      * current date and time. The \a morning and \a evening indicate when the morning and the evening
      * start, respectively. The \a transitionDuration indicates the duration of morning and evening.
      */
-    static KDarkLightSchedule forecast(const QDateTime &dateTime, const QTime &morning = QTime(6, 0), const QTime &evening = QTime(18, 0), std::chrono::milliseconds transitionDuration = std::chrono::minutes(30), int cycleCount = 7);
+    static KDarkLightSchedule forecast(const QDateTime &dateTime, QTime morning = QTime(6, 0), QTime evening = QTime(18, 0), std::chrono::milliseconds transitionDuration = std::chrono::minutes(30), int cycleCount = 7);
 
     /*!
      * Computes the dark-light schedule for the next \a cycleCount days. Dark-light cycles are computed

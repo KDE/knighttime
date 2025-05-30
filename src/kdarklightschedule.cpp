@@ -376,7 +376,7 @@ std::optional<KDarkLightSchedule> KDarkLightSchedule::fromState(const QString &s
     return deserializeSchedule(stream);
 }
 
-KDarkLightSchedule KDarkLightSchedule::forecast(const QDateTime &dateTime, const QTime &morning, const QTime &evening, std::chrono::milliseconds transitionDuration, int cycleCount)
+KDarkLightSchedule KDarkLightSchedule::forecast(const QDateTime &dateTime, QTime morning, QTime evening, std::chrono::milliseconds transitionDuration, int cycleCount)
 {
     QList<KDarkLightCycle> cycles;
     cycles.reserve(cycleCount + 1);

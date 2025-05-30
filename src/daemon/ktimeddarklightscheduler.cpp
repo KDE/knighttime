@@ -6,7 +6,7 @@
 
 #include "ktimeddarklightscheduler.h"
 
-KTimedDarkLightScheduler::KTimedDarkLightScheduler(const QTime &sunriseStart, const QTime &sunsetStart, int transitionDuration)
+KTimedDarkLightScheduler::KTimedDarkLightScheduler(QTime sunriseStart, QTime sunsetStart, int transitionDuration)
     : m_sunriseStart(sunriseStart)
     , m_sunsetStart(sunsetStart)
     , m_transitionDuration(transitionDuration)

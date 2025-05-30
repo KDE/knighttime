@@ -11,7 +11,7 @@
 class KTimedDarkLightScheduler : public KDarkLightScheduler
 {
 public:
-    KTimedDarkLightScheduler(const QTime &sunriseStart, const QTime &sunsetStart, int transitionDuration);
+    KTimedDarkLightScheduler(QTime sunriseStart, QTime sunsetStart, int transitionDuration);
 
     KDarkLightSchedule schedule(const QDateTime &referenceDateTime) override;
 
