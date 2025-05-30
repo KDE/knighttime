@@ -19,7 +19,7 @@ class KDarkLightManagerInterface : public QObject, public QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.NightTime.Manager")
-    Q_PROPERTY(uint Version READ version)
+    Q_PROPERTY(uint Version READ version CONSTANT)
 
 public:
     explicit KDarkLightManagerInterface(KDarkLightManager *manager, QObject *parent = nullptr);
