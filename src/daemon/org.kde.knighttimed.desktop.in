@@ -4,6 +4,14 @@
 [Desktop Entry]
 Type=Application
 Name=Night Time Service
+Name[ca]=Servei d'hora de nit
+Name[eu]=Gaueko ordu zerbitzua
+Name[he]=שירות לילי
+Name[ka]=ღამის სერვისი
+Name[nl]=Nachttijdservice
+Name[sl]=Storitev nočnega časa
+Name[uk]=Служба нічного часу
+Name[x-test]=xxNight Time Servicexx
 Exec=@KDE_INSTALL_FULL_LIBEXECDIR@/knighttimed
 NoDisplay=true
 OnlyShowIn=KDE;
