@@ -10,6 +10,7 @@ Name[he]=שירות לילי
 Name[ka]=ღამის სერვისი
 Name[nl]=Nachttijdservice
 Name[sl]=Storitev nočnega časa
+Name[sv]=Nattjänst
 Name[uk]=Служба нічного часу
 Name[x-test]=xxNight Time Servicexx
 Exec=@KDE_INSTALL_FULL_LIBEXECDIR@/knighttimed
