@@ -33,11 +33,11 @@
 
     <group name="ManualTimes">
         <entry name="SunsetStart" type="String">
-            <default>06:00</default>
+            <default>18:00</default>
         </entry>
 
         <entry name="SunriseStart" type="String">
-            <default>18:00</default>
+            <default>06:00</default>
         </entry>
 
         <entry name="TransitionDuration" type="UInt">
