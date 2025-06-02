@@ -5,7 +5,10 @@
 Type=Application
 Name=Night Time Service
 Name[ca]=Servei d'hora de nit
+Name[ca@valencia]=Servei prompte de nit
+Name[es]=Servicio de hora nocturna
 Name[eu]=Gaueko ordu zerbitzua
+Name[fr]=Service de nuit
 Name[he]=שירות לילי
 Name[ka]=ღამის სერვისი
 Name[nl]=Nachttijdservice
