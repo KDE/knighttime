@@ -32,12 +32,12 @@
     </group>
 
     <group name="ManualTimes">
-        <entry name="SunsetStart" type="String">
-            <default>18:00</default>
+        <entry name="SunsetStart" type="Time">
+            <default>18:00:00</default>
         </entry>
 
-        <entry name="SunriseStart" type="String">
-            <default>06:00</default>
+        <entry name="SunriseStart" type="Time">
+            <default>06:00:00</default>
         </entry>
 
         <entry name="TransitionDuration" type="UInt">
