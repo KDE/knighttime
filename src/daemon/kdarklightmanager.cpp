@@ -21,7 +21,7 @@ using namespace std::chrono_literals;
 KDarkLightManager::KDarkLightManager(QObject *parent)
     : QObject(parent)
     , m_dbusInterface(std::make_unique<KDarkLightManagerInterface>(this))
-    , m_settings(std::make_unique<KDarkLightSettings>())
+    , m_settings(std::make_unique<KDarkLightSettings>(KSharedConfig::openConfig(QStringLiteral("knighttimerc"), KConfig::NoGlobals)))
     , m_state(std::make_unique<KDarkLightState>())
     , m_skewNotifier(std::make_unique<KSystemClockSkewNotifier>())
     , m_scheduleTimer(std::make_unique<QTimer>())
