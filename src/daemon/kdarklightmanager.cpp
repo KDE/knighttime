@@ -11,7 +11,6 @@
 #include "ksolardarklightscheduler.h"
 #include "ktimeddarklightscheduler.h"
 
-#include <KConfigWatcher>
 #include <KSharedConfig>
 #include <KSystemClockSkewNotifier>
 
@@ -27,8 +26,11 @@ KDarkLightManager::KDarkLightManager(QObject *parent)
     , m_skewNotifier(std::make_unique<KSystemClockSkewNotifier>())
     , m_scheduleTimer(std::make_unique<QTimer>())
 {
-    auto configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
-    connect(configWatcher.get(), &KConfigWatcher::configChanged, this, &KDarkLightManager::reconfigure);
+    m_configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
+    connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this]() {
+        m_settings->read();
+        reconfigure();
+    });
 
     m_scheduleTimer->setSingleShot(false);
     m_scheduleTimer->setInterval(24h);

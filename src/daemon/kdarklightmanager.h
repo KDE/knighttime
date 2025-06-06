@@ -8,6 +8,8 @@
 
 #include "kdarklightscheduler.h"
 
+#include <KConfigWatcher>
+
 #include <QGeoPositionInfoSource>
 #include <QTimer>
 
@@ -33,6 +35,7 @@ Q_SIGNALS:
     void scheduleChanged();
 
 private:
+    KConfigWatcher::Ptr m_configWatcher;
     std::unique_ptr<KDarkLightManagerInterface> m_dbusInterface;
     std::unique_ptr<KDarkLightSettings> m_settings;
     std::unique_ptr<KDarkLightState> m_state;
