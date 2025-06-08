@@ -17,6 +17,7 @@ Name[sl]=Storitev nočnega časa
 Name[sv]=Nattjänst
 Name[uk]=Служба нічного часу
 Name[x-test]=xxNight Time Servicexx
+Name[zh_CN]=夜间服务
 Name[zh_TW]=夜間時間服務
 Exec=@KDE_INSTALL_FULL_LIBEXECDIR@/knighttimed
 NoDisplay=true
