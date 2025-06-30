@@ -8,11 +8,14 @@ kconfig_target_kcfg_file(knighttimed
     FILE kdarklightsettings.kcfg
     CLASS_NAME KDarkLightSettings
     GENERATE_MOC
+    GENERATE_PROPERTIES
 )
 
 kconfig_target_kcfg_file(knighttimed
     FILE kdarklightstate.kcfg
     CLASS_NAME KDarkLightState
+    GENERATE_MOC
+    GENERATE_PROPERTIES
     MUTATORS
 )
 
