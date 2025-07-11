@@ -55,10 +55,13 @@ void KDarkLightManager::reconfigure()
     m_scheduler.reset();
 
     switch (m_settings->source()) {
-    case KDarkLightSettings::AutomaticLocation:
-        if (auto source = QGeoPositionInfoSource::createDefaultSource(this)) {
+    case KDarkLightSettings::AutomaticLocation: {
+        const QVariantMap parameters{
+            {QStringLiteral("desktopId"), QStringLiteral("org.kde.knighttimed")},
+        };
+
+        if (auto source = QGeoPositionInfoSource::createDefaultSource(parameters, this)) {
             m_positionInfoSource.reset(source);
-            m_positionInfoSource->setBackendProperty(QStringLiteral("desktopId"), QStringLiteral("org.kde.knighttimed"));
             connect(m_positionInfoSource.get(), &QGeoPositionInfoSource::errorOccurred, this, [this]() {
                 m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
                 reschedule();
@@ -87,6 +90,7 @@ void KDarkLightManager::reconfigure()
 
         m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
         break;
+    }
     case KDarkLightSettings::ManualLocation:
         m_scheduler = std::make_unique<KSolarDarkLightScheduler>(QGeoCoordinate(m_settings->latitude(), m_settings->longitude()));
         break;
