@@ -28,6 +28,7 @@ include(ECMGenerateDBusServiceFile)
 include(ECMGenerateHeaders)
 include(ECMGenerateQDoc)
 include(ECMQtDeclareLoggingCategory)
+include(ECMDeprecationSettings)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -48,6 +49,10 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     DBusAddons
     Holidays
     I18n
+)
+
+ecm_set_disabled_deprecation_versions(QT 6.9.0
+    KF 6.16.0
 )
 
 check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTED)
