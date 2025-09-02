@@ -55,46 +55,47 @@ void KDarkLightManager::reconfigure()
     m_scheduler.reset();
 
     switch (m_settings->source()) {
-    case KDarkLightSettings::AutomaticLocation: {
-        const QVariantMap parameters{
-            {QStringLiteral("desktopId"), QStringLiteral("org.kde.knighttimed")},
-        };
+    case KDarkLightSettings::Location: {
+        if (m_settings->automaticLocation()) {
+            const QVariantMap parameters{
+                {QStringLiteral("desktopId"), QStringLiteral("org.kde.knighttimed")},
+            };
 
-        if (auto source = QGeoPositionInfoSource::createDefaultSource(parameters, this)) {
-            m_positionInfoSource.reset(source);
-            connect(m_positionInfoSource.get(), &QGeoPositionInfoSource::errorOccurred, this, [this]() {
-                m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
-                reschedule();
-            });
-            connect(m_positionInfoSource.get(), &QGeoPositionInfoSource::positionUpdated, this, [this](const QGeoPositionInfo &update) {
-                const QGeoCoordinate coordinate = update.coordinate();
-                m_state->setAvailable(true);
-                m_state->setLatitude(coordinate.latitude());
-                m_state->setLongitude(coordinate.longitude());
-                m_state->save();
-
-                const int minDistanceInMeters = 50000;
-                const auto currentScheduler = dynamic_cast<KSolarDarkLightScheduler *>(m_scheduler.get());
-                if (!currentScheduler || coordinate.distanceTo(currentScheduler->coordinate()) > minDistanceInMeters) {
-                    m_scheduler = std::make_unique<KSolarDarkLightScheduler>(coordinate);
+            if (auto source = QGeoPositionInfoSource::createDefaultSource(parameters, this)) {
+                m_positionInfoSource.reset(source);
+                connect(m_positionInfoSource.get(), &QGeoPositionInfoSource::errorOccurred, this, [this]() {
+                    m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
                     reschedule();
+                });
+                connect(m_positionInfoSource.get(), &QGeoPositionInfoSource::positionUpdated, this, [this](const QGeoPositionInfo &update) {
+                    const QGeoCoordinate coordinate = update.coordinate();
+                    m_state->setAvailable(true);
+                    m_state->setLatitude(coordinate.latitude());
+                    m_state->setLongitude(coordinate.longitude());
+                    m_state->save();
+
+                    const int minDistanceInMeters = 50000;
+                    const auto currentScheduler = dynamic_cast<KSolarDarkLightScheduler *>(m_scheduler.get());
+                    if (!currentScheduler || coordinate.distanceTo(currentScheduler->coordinate()) > minDistanceInMeters) {
+                        m_scheduler = std::make_unique<KSolarDarkLightScheduler>(coordinate);
+                        reschedule();
+                    }
+                });
+
+                m_positionInfoSource->startUpdates();
+                if (m_state->available()) {
+                    m_scheduler = std::make_unique<KSolarDarkLightScheduler>(QGeoCoordinate(m_state->latitude(), m_state->longitude()));
+                    break;
                 }
-            });
-
-            m_positionInfoSource->startUpdates();
-            if (m_state->available()) {
-                m_scheduler = std::make_unique<KSolarDarkLightScheduler>(QGeoCoordinate(m_state->latitude(), m_state->longitude()));
-                break;
             }
-        }
 
-        m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
+            m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
+        } else {
+            m_scheduler = std::make_unique<KSolarDarkLightScheduler>(QGeoCoordinate(m_settings->manualLatitude(), m_settings->manualLongitude()));
+        }
         break;
     }
-    case KDarkLightSettings::ManualLocation:
-        m_scheduler = std::make_unique<KSolarDarkLightScheduler>(QGeoCoordinate(m_settings->latitude(), m_settings->longitude()));
-        break;
-    case KDarkLightSettings::ManualTimes:
+    case KDarkLightSettings::Times:
         m_scheduler = std::make_unique<KTimedDarkLightScheduler>(m_settings->sunriseStart(), m_settings->sunsetStart(), m_settings->transitionDuration());
         break;
     }
