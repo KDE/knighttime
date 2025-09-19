@@ -14,6 +14,9 @@
 #include <KSharedConfig>
 #include <KSystemClockSkewNotifier>
 
+#include <QDBusConnection>
+#include <QTimeZone>
+
 #include <chrono>
 
 using namespace std::chrono_literals;
@@ -38,6 +41,8 @@ KDarkLightManager::KDarkLightManager(QObject *parent)
 
     m_skewNotifier->setActive(true);
     connect(m_skewNotifier.get(), &KSystemClockSkewNotifier::skewed, this, &KDarkLightManager::reschedule);
+
+    QDBusConnection::sessionBus().connect(QString(), QString(), QStringLiteral("org.kde.KTimeZoned"), QStringLiteral("timeZoneChanged"), this, SIGNAL(reschedule()));
 }
 
 KDarkLightManager::~KDarkLightManager()
@@ -105,7 +110,7 @@ void KDarkLightManager::reconfigure()
 
 void KDarkLightManager::reschedule()
 {
-    const auto schedule = m_scheduler->schedule(QDateTime::currentDateTime());
+    const auto schedule = m_scheduler->schedule(QDateTime::currentDateTime(QTimeZone::systemTimeZone()));
     if (m_schedule != schedule) {
         m_schedule = schedule;
         Q_EMIT scheduleChanged();

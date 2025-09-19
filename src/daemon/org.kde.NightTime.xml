@@ -17,13 +17,13 @@
         of the schedule (currently, only "dynamic" is supported). The second value contains
         the actual schedule information.
 
-        With the dynamic type, the schedule payload has "a(xxxxx)" type:
+        With the dynamic type, the schedule payload has "a((xay)(xay)(xay)(xay)(xay))" type:
 
-        * noon (x): the unix timestamp (in milliseconds) of the noon
-        * morning-start (x): the unix timestamp (in milliseconds) of the time when morning starts
-        * morning-end (x): the unix timestamp (in milliseconds) of the time when morning ends
-        * evening-start (x): the unix timestamp (in milliseconds) of the time when evening starts
-        * evening-end (x): the unix timestamp (in milliseconds) of the time when evening ends
+        * noon ((xay)): the unix timestamp (in milliseconds) and timezone id of the noon
+        * morning-start ((xay)): the unix timestamp (in milliseconds) and timezone id of the time when morning starts
+        * morning-end ((xay)): the unix timestamp (in milliseconds) and timezone id of the time when morning ends
+        * evening-start ((xay)): the unix timestamp (in milliseconds) and timezone id of the time when evening starts
+        * evening-end ((xay)): the unix timestamp (in milliseconds) and timezone id of the time when evening ends
     -->
     <interface name="org.kde.NightTime.Manager">
         <!--

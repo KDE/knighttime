@@ -28,11 +28,12 @@ public:
 
     KDarkLightSchedule schedule() const;
 
-    void reconfigure();
-    void reschedule();
-
 Q_SIGNALS:
     void scheduleChanged();
+
+public Q_SLOTS:
+    void reconfigure();
+    void reschedule();
 
 private:
     KConfigWatcher::Ptr m_configWatcher;

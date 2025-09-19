@@ -9,6 +9,7 @@
 #include <KHolidays/SunEvents>
 
 #include <QBuffer>
+#include <QTimeZone>
 
 using namespace std::chrono_literals;
 
@@ -383,9 +384,8 @@ KDarkLightSchedule KDarkLightSchedule::forecast(const QDateTime &dateTime, QTime
 
     const int halfOfDaylight = morning.secsTo(evening) / 2;
     const QTime noon = morning.addSecs(halfOfDaylight);
-    const QDateTime localDateTime = dateTime.toLocalTime();
     for (int day = -1; day < cycleCount; ++day) {
-        const QDateTime noonDataTime(localDateTime.date().addDays(day), noon);
+        const QDateTime noonDataTime(dateTime.date().addDays(day), noon, dateTime.timeZone());
 
         const QDateTime startOfMorning = noonDataTime.addSecs(-halfOfDaylight);
         const QDateTime endOfMorning = startOfMorning + transitionDuration;

@@ -10,14 +10,24 @@
 
 #include <QDBusArgument>
 #include <QDebug>
+#include <QTimeZone>
+
+struct KNightTimeDbusDateTime
+{
+    qint64 timestamp;
+    QByteArray timezone;
+
+    QDateTime into() const;
+    static KNightTimeDbusDateTime from(const QDateTime &dateTime);
+};
 
 struct KNightTimeDbusCycle
 {
-    qint64 noonTimestamp;
-    qint64 morningStartTimestamp;
-    qint64 morningEndTimestamp;
-    qint64 eveningStartTimestamp;
-    qint64 eveningEndTimestamp;
+    KNightTimeDbusDateTime noon;
+    KNightTimeDbusDateTime morningStart;
+    KNightTimeDbusDateTime morningEnd;
+    KNightTimeDbusDateTime eveningStart;
+    KNightTimeDbusDateTime eveningEnd;
 
     KDarkLightCycle into() const;
     static KNightTimeDbusCycle from(const KDarkLightCycle &cycle);
@@ -32,26 +42,40 @@ struct KNightTimeDbusSchedule
     static KNightTimeDbusSchedule from(const KDarkLightSchedule &schedule);
 };
 
+inline const QDBusArgument &operator<<(QDBusArgument &argument, const KNightTimeDbusDateTime &dateTime)
+{
+    argument << dateTime.timestamp;
+    argument << dateTime.timezone;
+    return argument;
+}
+
 inline const QDBusArgument &operator<<(QDBusArgument &argument, const KNightTimeDbusCycle &cycle)
 {
     argument.beginStructure();
-    argument << cycle.noonTimestamp;
-    argument << cycle.morningStartTimestamp;
-    argument << cycle.morningEndTimestamp;
-    argument << cycle.eveningStartTimestamp;
-    argument << cycle.eveningEndTimestamp;
+    argument << cycle.noon;
+    argument << cycle.morningStart;
+    argument << cycle.morningEnd;
+    argument << cycle.eveningStart;
+    argument << cycle.eveningEnd;
     argument.endStructure();
+    return argument;
+}
+
+inline const QDBusArgument &operator>>(const QDBusArgument &argument, KNightTimeDbusDateTime &dateTime)
+{
+    argument >> dateTime.timestamp;
+    argument >> dateTime.timezone;
     return argument;
 }
 
 inline const QDBusArgument &operator>>(const QDBusArgument &argument, KNightTimeDbusCycle &cycle)
 {
     argument.beginStructure();
-    argument >> cycle.noonTimestamp;
-    argument >> cycle.morningStartTimestamp;
-    argument >> cycle.morningEndTimestamp;
-    argument >> cycle.eveningStartTimestamp;
-    argument >> cycle.eveningEndTimestamp;
+    argument >> cycle.noon;
+    argument >> cycle.morningStart;
+    argument >> cycle.morningEnd;
+    argument >> cycle.eveningStart;
+    argument >> cycle.eveningEnd;
     argument.endStructure();
     return argument;
 }
@@ -74,21 +98,34 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, KNightTime
     return argument;
 }
 
+inline QDateTime KNightTimeDbusDateTime::into() const
+{
+    return QDateTime::fromMSecsSinceEpoch(timestamp, QTimeZone(timezone));
+}
+
+inline KNightTimeDbusDateTime KNightTimeDbusDateTime::from(const QDateTime &dateTime)
+{
+    return KNightTimeDbusDateTime{
+        .timestamp = dateTime.toMSecsSinceEpoch(),
+        .timezone = dateTime.timeZone().id(),
+    };
+}
+
 inline KDarkLightCycle KNightTimeDbusCycle::into() const
 {
-    return KDarkLightCycle(QDateTime::fromMSecsSinceEpoch(noonTimestamp),
-                           KDarkLightTransition(KDarkLightTransition::Morning, QDateTime::fromMSecsSinceEpoch(morningStartTimestamp), QDateTime::fromMSecsSinceEpoch(morningEndTimestamp)),
-                           KDarkLightTransition(KDarkLightTransition::Evening, QDateTime::fromMSecsSinceEpoch(eveningStartTimestamp), QDateTime::fromMSecsSinceEpoch(eveningEndTimestamp)));
+    return KDarkLightCycle(noon.into(),
+                           KDarkLightTransition(KDarkLightTransition::Morning, morningStart.into(), morningEnd.into()),
+                           KDarkLightTransition(KDarkLightTransition::Evening, eveningStart.into(), eveningEnd.into()));
 }
 
 inline KNightTimeDbusCycle KNightTimeDbusCycle::from(const KDarkLightCycle &cycle)
 {
     return KNightTimeDbusCycle{
-        .noonTimestamp = cycle.noonDateTime().toMSecsSinceEpoch(),
-        .morningStartTimestamp = cycle.morning().startDateTime().toMSecsSinceEpoch(),
-        .morningEndTimestamp = cycle.morning().endDateTime().toMSecsSinceEpoch(),
-        .eveningStartTimestamp = cycle.evening().startDateTime().toMSecsSinceEpoch(),
-        .eveningEndTimestamp = cycle.evening().endDateTime().toMSecsSinceEpoch(),
+        .noon = KNightTimeDbusDateTime::from(cycle.noonDateTime()),
+        .morningStart = KNightTimeDbusDateTime::from(cycle.morning().startDateTime()),
+        .morningEnd = KNightTimeDbusDateTime::from(cycle.morning().endDateTime()),
+        .eveningStart = KNightTimeDbusDateTime::from(cycle.evening().startDateTime()),
+        .eveningEnd = KNightTimeDbusDateTime::from(cycle.evening().endDateTime()),
     };
 }
 
