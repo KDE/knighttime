@@ -6,7 +6,7 @@
 
 # KNightTime
 
-The `KNightTime` provides helpers for scheduiling the dark-light cycle. It can be used to implement
+The `KNightTime` provides helpers for scheduling the dark-light cycle. It can be used to implement
 features such as adjusting the screen color temperature based on time of day, etc.
 
 ## Features
