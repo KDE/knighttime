@@ -61,10 +61,7 @@ static void migrateNightLightConfig(KDarkLightSettings *knighttimerc)
     }
 
     for (const QString &key : std::as_const(keysToDelete)) {
-        // hasKey() should be unnecessary with https://invent.kde.org/frameworks/kconfig/-/merge_requests/392.
-        if (nightLight.hasKey(key)) {
-            nightLight.deleteEntry(key);
-        }
+        nightLight.deleteEntry(key);
     }
 }
 
