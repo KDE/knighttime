@@ -18,6 +18,56 @@
 
 using namespace std::chrono_literals;
 
+static void migrateNightLightConfig(KDarkLightSettings *knighttimerc)
+{
+    const KSharedConfig::Ptr kwinrc = KSharedConfig::openConfig(QStringLiteral("kwinrc"));
+    KConfigGroup nightLight(kwinrc.get(), QStringLiteral("NightColor"));
+
+    QStringList keysToDelete{
+        QStringLiteral("MorningBeginFixed"),
+        QStringLiteral("EveningBeginFixed"),
+        QStringLiteral("TransitionTime"),
+        QStringLiteral("LatitudeAuto"),
+        QStringLiteral("LatitudeFixed"),
+        QStringLiteral("LongitudeAuto"),
+        QStringLiteral("LongitudeFixed"),
+    };
+
+    // Note that the Mode should not be removed if its value is either DarkLight (default) or Constant.
+    const QString mode = nightLight.readEntry(QStringLiteral("Mode"), QString());
+    if (mode == QLatin1String("Times")) {
+        keysToDelete << QStringLiteral("Mode");
+
+        knighttimerc->setSource(KDarkLightSettings::Source::Times);
+        knighttimerc->setSunriseStart(QTime::fromString(nightLight.readEntry(QStringLiteral("MorningBeginFixed"), QStringLiteral("0600")), QStringLiteral("hhmm")));
+        knighttimerc->setSunsetStart(QTime::fromString(nightLight.readEntry(QStringLiteral("EveningBeginFixed"), QStringLiteral("1800")), QStringLiteral("hhmm")));
+        knighttimerc->setTransitionDuration(nightLight.readEntry<int>(QStringLiteral("TransitionTime"), 30) * 60);
+        knighttimerc->save();
+    } else if (mode == QLatin1String("Automatic")) {
+        keysToDelete << QStringLiteral("Mode");
+
+        // Effectively, there is nothing to migrate, the automatic mode is the default.
+        knighttimerc->setSource(KDarkLightSettings::Source::Location);
+        knighttimerc->setAutomaticLocation(true);
+        knighttimerc->save();
+    } else if (mode == QLatin1String("Location")) {
+        keysToDelete << QStringLiteral("Mode");
+
+        knighttimerc->setSource(KDarkLightSettings::Source::Location);
+        knighttimerc->setAutomaticLocation(false);
+        knighttimerc->setManualLatitude(nightLight.readEntry(QStringLiteral("LatitudeFixed"), 0.0));
+        knighttimerc->setManualLongitude(nightLight.readEntry(QStringLiteral("LongitudeFixed"), 0.0));
+        knighttimerc->save();
+    }
+
+    for (const QString &key : std::as_const(keysToDelete)) {
+        // hasKey() should be unnecessary with https://invent.kde.org/frameworks/kconfig/-/merge_requests/392.
+        if (nightLight.hasKey(key)) {
+            nightLight.deleteEntry(key);
+        }
+    }
+}
+
 KDarkLightManager::KDarkLightManager(QObject *parent)
     : QObject(parent)
     , m_dbusInterface(std::make_unique<KDarkLightManagerInterface>(this))
@@ -26,6 +76,8 @@ KDarkLightManager::KDarkLightManager(QObject *parent)
     , m_skewNotifier(std::make_unique<KSystemClockSkewNotifier>())
     , m_scheduleTimer(std::make_unique<QTimer>())
 {
+    migrateNightLightConfig(m_settings.get());
+
     m_configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this]() {
         m_settings->read();
