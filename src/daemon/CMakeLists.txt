@@ -9,6 +9,7 @@ kconfig_target_kcfg_file(knighttimed
     CLASS_NAME KDarkLightSettings
     GENERATE_MOC
     GENERATE_PROPERTIES
+    MUTATORS
 )
 
 kconfig_target_kcfg_file(knighttimed
