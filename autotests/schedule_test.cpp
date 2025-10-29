@@ -26,23 +26,46 @@ private Q_SLOTS:
 
 void ScheduleTest::timedForecast()
 {
-    const KDarkLightSchedule schedule = KDarkLightSchedule::forecast(QDateTime(QDate(2025, 5, 25), QTime(12, 0)), QTime(6, 0), QTime(18, 0), 30min, 3);
-    const QList<KDarkLightCycle> cycles{
-        KDarkLightCycle(QDateTime(QDate(2025, 5, 24), QTime(12, 0)),
-                        KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 24), QTime(6, 0)), QDateTime(QDate(2025, 5, 24), QTime(6, 30))),
-                        KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 24), QTime(18, 0)), QDateTime(QDate(2025, 5, 24), QTime(18, 30)))),
-        KDarkLightCycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
-                        KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
-                        KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30)))),
-        KDarkLightCycle(QDateTime(QDate(2025, 5, 26), QTime(12, 0)),
-                        KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 26), QTime(6, 0)), QDateTime(QDate(2025, 5, 26), QTime(6, 30))),
-                        KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 26), QTime(18, 0)), QDateTime(QDate(2025, 5, 26), QTime(18, 30)))),
-        KDarkLightCycle(QDateTime(QDate(2025, 5, 27), QTime(12, 0)),
-                        KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 27), QTime(6, 0)), QDateTime(QDate(2025, 5, 27), QTime(6, 30))),
-                        KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 27), QTime(18, 0)), QDateTime(QDate(2025, 5, 27), QTime(18, 30)))),
-    };
+    {
+        const KDarkLightSchedule schedule = KDarkLightSchedule::forecast(QDateTime(QDate(2025, 5, 25), QTime(12, 0)), QTime(6, 0), QTime(18, 0), 30min, 3);
+        const QList<KDarkLightCycle> cycles{
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 24), QTime(12, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 24), QTime(6, 0)), QDateTime(QDate(2025, 5, 24), QTime(6, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 24), QTime(18, 0)), QDateTime(QDate(2025, 5, 24), QTime(18, 30)))),
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 25), QTime(12, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30)))),
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 26), QTime(12, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 26), QTime(6, 0)), QDateTime(QDate(2025, 5, 26), QTime(6, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 26), QTime(18, 0)), QDateTime(QDate(2025, 5, 26), QTime(18, 30)))),
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 27), QTime(12, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 27), QTime(6, 0)), QDateTime(QDate(2025, 5, 27), QTime(6, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 27), QTime(18, 0)), QDateTime(QDate(2025, 5, 27), QTime(18, 30)))),
+        };
 
-    QCOMPARE(schedule.cycles(), cycles);
+        QCOMPARE(schedule.cycles(), cycles);
+    }
+
+    // with morning and evening times vice versa
+    {
+        const KDarkLightSchedule schedule = KDarkLightSchedule::forecast(QDateTime(QDate(2025, 5, 25), QTime(12, 0)), QTime(18, 0), QTime(6, 0), 30min, 3);
+        const QList<KDarkLightCycle> cycles{
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 24), QTime(0, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 23), QTime(18, 0)), QDateTime(QDate(2025, 5, 23), QTime(18, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 24), QTime(6, 0)), QDateTime(QDate(2025, 5, 24), QTime(6, 30)))),
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 25), QTime(0, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 24), QTime(18, 0)), QDateTime(QDate(2025, 5, 24), QTime(18, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 25), QTime(6, 0)), QDateTime(QDate(2025, 5, 25), QTime(6, 30)))),
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 26), QTime(0, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 25), QTime(18, 0)), QDateTime(QDate(2025, 5, 25), QTime(18, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 26), QTime(6, 0)), QDateTime(QDate(2025, 5, 26), QTime(6, 30)))),
+            KDarkLightCycle(QDateTime(QDate(2025, 5, 27), QTime(0, 0)),
+                            KDarkLightTransition(KDarkLightTransition::Morning, QDateTime(QDate(2025, 5, 26), QTime(18, 0)), QDateTime(QDate(2025, 5, 26), QTime(18, 30))),
+                            KDarkLightTransition(KDarkLightTransition::Evening, QDateTime(QDate(2025, 5, 27), QTime(6, 0)), QDateTime(QDate(2025, 5, 27), QTime(6, 30)))),
+        };
+
+        QCOMPARE(schedule.cycles(), cycles);
+    }
 }
 
 void ScheduleTest::solarForecast()
