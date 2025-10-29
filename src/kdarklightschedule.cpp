@@ -376,12 +376,22 @@ std::optional<KDarkLightSchedule> KDarkLightSchedule::fromState(const QString &s
     return deserializeSchedule(stream);
 }
 
+static int daylightDurationInSeconds(QTime morning, QTime evening)
+{
+    if (morning < evening) {
+        return morning.secsTo(evening);
+    } else {
+        const int secondsInDay = 86400;
+        return secondsInDay - evening.secsTo(morning);
+    }
+}
+
 KDarkLightSchedule KDarkLightSchedule::forecast(const QDateTime &dateTime, QTime morning, QTime evening, std::chrono::milliseconds transitionDuration, int cycleCount)
 {
     QList<KDarkLightCycle> cycles;
     cycles.reserve(cycleCount + 1);
 
-    const int halfOfDaylight = morning.secsTo(evening) / 2;
+    const int halfOfDaylight = daylightDurationInSeconds(morning, evening) / 2;
     const QTime noon = morning.addSecs(halfOfDaylight);
     const QDateTime localDateTime = dateTime.toLocalTime();
     for (int day = -1; day < cycleCount; ++day) {
