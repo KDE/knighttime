@@ -11,9 +11,7 @@
 #include <QObject>
 #include <QVariant>
 
-class KDarkLightCycle;
 class KDarkLightManager;
-class KDarkLightSchedule;
 
 class KDarkLightManagerInterface : public QObject, public QDBusContext
 {
