@@ -31,31 +31,16 @@ std::shared_ptr<KDarkLightScheduleSubscription> KDarkLightScheduleSubscription::
 KDarkLightScheduleSubscription::KDarkLightScheduleSubscription(QObject *parent)
     : QObject(parent)
 {
-    QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Refreshed"), this, SLOT(OnRefreshed(QVariantMap)));
+    auto bus = QDBusConnection::sessionBus();
+    bus.connect(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Refreshed"), this, SLOT(OnRefreshed(QVariantMap)));
 
-    auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Subscribe"));
-    message.setArguments({QVariantMap()});
-    auto pendingCall = QDBusConnection::sessionBus().asyncCall(message);
+    m_daemonWatcher = std::make_unique<QDBusServiceWatcher>(QStringLiteral("org.kde.NightTime"), bus);
+    connect(m_daemonWatcher.get(), &QDBusServiceWatcher::serviceRegistered,
+            this, &KDarkLightScheduleSubscription::OnDaemonRegistered);
+    connect(m_daemonWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
+            this, &KDarkLightScheduleSubscription::OnDaemonUnregistered);
 
-    auto watcher = new QDBusPendingCallWatcher(pendingCall);
-    auto self = QPointer(this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, qApp, [self](QDBusPendingCallWatcher *watcher) {
-        watcher->deleteLater();
-
-        if (watcher->isError()) {
-            qCWarning(KNIGHTTIME) << "Subscribe() failed:" << watcher->error();
-            return;
-        }
-
-        QDBusPendingReply<QVariantMap> reply = *watcher;
-        if (self) {
-            self->OnSubscribed(reply.value());
-        } else {
-            auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Unsubscribe"));
-            message.setArguments({reply.value().value(QStringLiteral("Cookie"))});
-            QDBusConnection::sessionBus().asyncCall(message);
-        }
-    });
+    subscribe();
 }
 
 KDarkLightScheduleSubscription::~KDarkLightScheduleSubscription()
@@ -97,6 +82,59 @@ void KDarkLightScheduleSubscription::OnRefreshed(const QVariantMap &data)
     if (m_cookie) {
         update(data[QStringLiteral("Schedule")]);
     }
+}
+
+void KDarkLightScheduleSubscription::OnDaemonRegistered()
+{
+    // Usually, if we start the daemon, we will get the reply for the Subscribe request first, then
+    // we will get notified that the daemon service has become available. However, just to be sure,
+    // this code also handles when things are vice versa.
+    //
+    // If there is an in-flight subscribe request (but it fails) and the daemon dies and it is started
+    // again, this code assumes that the error reply will be processed before this slot gets called.
+
+    if (!m_cookie && !m_cookieWatcher) {
+        subscribe();
+    }
+}
+
+void KDarkLightScheduleSubscription::OnDaemonUnregistered()
+{
+    m_cookie.reset();
+
+    // Avoid resetting the cookie watcher. The subscribe request could have been sent around the
+    // same time the daemon has been unregistered. In which case, the daemon will be started again.
+}
+
+void KDarkLightScheduleSubscription::subscribe()
+{
+    auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Subscribe"));
+    message.setArguments({QVariantMap()});
+    auto pendingCall = QDBusConnection::sessionBus().asyncCall(message);
+
+    m_cookieWatcher = new QDBusPendingCallWatcher(pendingCall);
+    connect(m_cookieWatcher, &QDBusPendingCallWatcher::finished, qApp, [self = QPointer(this)](QDBusPendingCallWatcher *watcher) {
+        watcher->deleteLater();
+
+        if (watcher->isError()) {
+            if (self && self->m_cookieWatcher == watcher) {
+                self->m_cookieWatcher = nullptr;
+            }
+            qCWarning(KNIGHTTIME) << "Subscribe() failed:" << watcher->error();
+            return;
+        }
+
+        QDBusPendingReply<QVariantMap> reply = *watcher;
+        if (self && self->m_cookieWatcher == watcher) {
+            self->m_cookieWatcher = nullptr;
+
+            self->OnSubscribed(reply.value());
+        } else {
+            auto message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.NightTime"), QStringLiteral("/org/kde/NightTime/Manager"), QStringLiteral("org.kde.NightTime.Manager"), QStringLiteral("Unsubscribe"));
+            message.setArguments({reply.value().value(QStringLiteral("Cookie"))});
+            QDBusConnection::sessionBus().asyncCall(message);
+        }
+    });
 }
 
 void KDarkLightScheduleSubscription::update(const QVariant &data)

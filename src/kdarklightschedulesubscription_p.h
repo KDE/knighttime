@@ -8,6 +8,8 @@
 
 #include "kdarklightschedule.h"
 
+#include <QDBusPendingCallWatcher>
+#include <QDBusServiceWatcher>
 #include <QObject>
 
 class KDarkLightScheduleSubscription : public QObject
@@ -29,11 +31,16 @@ Q_SIGNALS:
 private Q_SLOTS:
     void OnSubscribed(const QVariantMap &data);
     void OnRefreshed(const QVariantMap &data);
+    void OnDaemonRegistered();
+    void OnDaemonUnregistered();
 
 private:
+    void subscribe();
     void update(const QVariant &data);
 
+    std::unique_ptr<QDBusServiceWatcher> m_daemonWatcher;
     std::optional<KDarkLightSchedule> m_schedule;
     QString m_state;
+    QDBusPendingCallWatcher *m_cookieWatcher = nullptr;
     std::optional<uint> m_cookie;
 };
