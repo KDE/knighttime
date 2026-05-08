@@ -42,7 +42,6 @@ ecm_qt_declare_logging_category(KNightTime
     HEADER knighttimelogging.h
     IDENTIFIER KNIGHTTIME
     CATEGORY_NAME knighttime
-    DEFAULT_SEVERITY Warning
     DESCRIPTION "Helpers for scheduling the dark-light cycle"
     EXPORT KNightTime
 )
