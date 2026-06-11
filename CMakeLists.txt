@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-set(PROJECT_VERSION "6.6.91")
+set(PROJECT_VERSION "6.7.0")
 project(KNightTime VERSION ${PROJECT_VERSION})
 
 set(CMAKE_CXX_STANDARD 23)
