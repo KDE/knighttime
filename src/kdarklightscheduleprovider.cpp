@@ -7,6 +7,9 @@
 #include "kdarklightscheduleprovider.h"
 #include "kdarklightscheduleprovider_p.h"
 
+#include <QCoreApplication>
+#include <QPromise>
+
 KDarkLightScheduleProvider::KDarkLightScheduleProvider(const QString &state, QObject *parent)
     : QObject(parent)
     , d(new KDarkLightScheduleProviderPrivate)
@@ -45,6 +48,28 @@ KDarkLightSchedule KDarkLightScheduleProvider::schedule() const
 QString KDarkLightScheduleProvider::state() const
 {
     return d->state;
+}
+
+QFuture<KDarkLightSchedule> KDarkLightScheduleProvider::poll()
+{
+    auto subscription = KDarkLightScheduleSubscription::globalSubscription();
+    if (subscription->schedule()) {
+        return QtFuture::makeReadyValueFuture(*subscription->schedule());
+    }
+
+    QPromise<KDarkLightSchedule> promise;
+    QFuture<KDarkLightSchedule> future = promise.future();
+
+    promise.start();
+
+    QObject::connect(subscription.get(), &KDarkLightScheduleSubscription::refreshed, qApp, [subscription, p = std::move(promise)]() mutable {
+        if (subscription->schedule()) {
+            p.addResult(*subscription->schedule());
+        }
+        p.finish();
+    }, Qt::SingleShotConnection);
+
+    return future;
 }
 
 #include "moc_kdarklightscheduleprovider.cpp"

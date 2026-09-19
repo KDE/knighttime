@@ -8,6 +8,8 @@
 
 #include "kdarklightschedule.h"
 
+#include <QFuture>
+
 class KDarkLightScheduleProviderPrivate;
 
 /*!
@@ -58,6 +60,12 @@ public:
      * at system startup.
      */
     QString state() const;
+
+    /*!
+     * Asks for the schedule of the dark-light cycle one time. The schedule may be requested
+     * asynchronously and provided some time later in the future.
+     */
+    static QFuture<KDarkLightSchedule> poll();
 
 Q_SIGNALS:
     /*!
